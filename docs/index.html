@@ -84,145 +84,68 @@
             background: var(--surface);
             color: var(--text);
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            outline: none;
-        }
-        .search-box:focus {
-            border-color: #ffeb3b;
-        }
-        .search-btn {
-            margin-top: 2rem;
-            padding: 1.2rem 4rem;
-            font-size: 1.3rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(211,47,47,0.3);
-        }
-        .search-btn:hover {
-            background: var(--secondary);
-        }
-        #theme-toggle {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: white;
-        }
-        .hint {
-            margin-top: 1.5rem;
-            font-size: 1.1rem;
-            color: var(--muted);
-        }
-    </style>
-        @media (max-width: 600px) {
-            .title { font-size: 2.2rem; }
-            .search-box { font-size: 1.2rem; padding: 1.2rem; }
-            .mode-btn { padding: 0.7rem 1.5rem; }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <button id="theme-toggle" aria-label="Thème sombre/clair">🌙</button>
-        <h1 class="title">Canadia</h1>
-        <p class="subtitle">Comprendre. Structurer. Décider.</p>
-        <div class="mode-selector">
-            <button class="mode-btn active" onclick="setMode('citizen')">Citoyen</button>
-            <button class="mode-btn" onclick="setMode('student')">Étudiant</button>
-            <button class="mode-btn" onclick="setMode('pro')">Entreprise</button>
-        </div>
-    </header>
-
-    <main>
-        <input type="text" class="search-box" id="query" placeholder="Posez votre question ou recherchez un sujet..." autocomplete="off" />
-        <p class="hint" id="mode-hint">Recherche générale pour tous les citoyens</p>
-        <button class="search-btn" onclick="search()">Rechercher avec Canadia</button>
-    </main>
-
-    <script>
-        let currentMode = 'citizen';
-        const hints = {
-            citizen: "Recherche générale pour tous les citoyens",
-            student: "Analyse adaptée au contexte universitaire et étudiant",
-            pro: "Analyse stratégique pour entreprises et organisations"
-        };
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('mode-hint').textContent = hints[mode];
-        }
-
-        function search() {
-            const query = document.getElementById('query').value.trim();
-            if (!query) return alert('Entrez une question !');
-            // À connecter au backend plus tard : fetch(`/api/${currentMode}/ask`, ...)
-            alert(`Recherche "${query}" en mode ${currentMode} (bientôt : résultats structurés)`);
-        }
-
-        // Thème sombre/clair
-        document.getElementById('theme-toggle').onclick = () => {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
-        };
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark');
-            document.getElementById('theme-toggle').textContent = '☀️';
-        }
-    </script>
-</body>
-</html>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background: #b30000;
-            color: white;
-            padding: 1rem;
-        }
-
-        main {
-            padding: 1rem;
-            max-width: 900px;
-            margin: auto;
-        }
-
-        .news-item {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid #b30000;
-        }
-
-        .news-meta {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .loading, .error {
-            text-align: center;
-            margin-top: 2rem;
-            color: #666;
-        }
-
-        /* Canadia Pro Dashboard Styles */
-        .dashboard {
-            background: white;
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Canadia — Comprendre. Structurer. Décider.</title>
+                <style>
+                    :root {
+                        --primary: #d32f2f;
+                        --secondary: #f44336;
+                        --accent: #ffeb3b;
+                        --bg: #ffffff;
+                        --surface: #f8f9fa;
+                        --text: #212121;
+                        --muted: #666666;
+                    }
+                    body.dark {
+                        --bg: #121212;
+                        --surface: #1e1e1e;
+                        --text: #f5f5f5;
+                        --muted: #aaaaaa;
+                    }
+                    body {
+                        margin: 0;
+                        font-family: system-ui, -apple-system, sans-serif;
+                        background: var(--bg);
+                        color: var(--text);
+                        min-height: 100vh;
+                        display: flex;
+                        flex-direction: column;
+                        transition: all 0.3s;
+                    }
+                    header {
+                        background: var(--primary);
+                        color: white;
+                        padding: 2rem 1rem;
+                        text-align: center;
+                    }
+                    .title { font-size: 2.8rem; font-weight: 700; margin: 0; }
+                    .subtitle { font-size: 1.2rem; opacity: 0.9; margin: 0.5rem 0 2rem; }
+                    .mode-selector { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+                    .mode-btn {
+                        padding: 0.8rem 2rem; background: rgba(255,255,255,0.2); border: none; border-radius: 50px;
+                        color: white; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;
+                    }
+                    .mode-btn.active { background: white; color: var(--primary); font-weight: 600; }
+                    main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
+                    .search-container { width: 100%; max-width: 800px; text-align: center; }
+                    .search-box {
+                        width: 100%; padding: 1.5rem 2rem; font-size: 1.4rem; border: 4px solid var(--secondary);
+                        border-radius: 50px; background: var(--surface); color: var(--text);
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.1); outline: none;
+                    }
+                    .search-box:focus { border-color: var(--accent); }
+                    .search-btn {
+                        margin-top: 2rem; padding: 1.2rem 4rem; font-size: 1.3rem; background: var(--primary);
+                        color: white; border: none; border-radius: 50px; cursor: pointer;
+                        box-shadow: 0 8px 25px rgba(211,47,47,0.3); transition: all 0.3s;
+                    }
+                    .search-btn:hover { background: var(--secondary); }
+                    #theme-toggle { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: white; }
+                    .hint { margin-top: 1.5rem; font-size: 1.1rem; color: var(--muted); }
+                    #results { width: 100%; max-width: 800px; margin-top: 3rem; padding: 1rem; background: var(--surface); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+                    #results h2 { color: var(--primary); }
+                    #loader { text-align: center; margin: 2rem; color: var(--muted); font-size: 1.2rem; display: none; }
             border-radius: 6px;
             padding: 1rem;
             </header>
