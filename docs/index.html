@@ -24,10 +24,11 @@
                     --primary: #d32f2f;
                     --secondary: #f44336;
                     --accent: #ffeb3b;
-                    --bg: #ffffff;
-                    --surface: #f8f9fa;
+                    --bg: #e3f2fd;
+                    --surface: #fff;
                     --text: #212121;
                     --muted: #666666;
+                    --gradient: linear-gradient(90deg, #3a8dde 0%, #d32f2f 100%);
                 }
                 body.dark {
                     --bg: #121212;
@@ -44,6 +45,128 @@
                     display: flex;
                     flex-direction: column;
                     transition: all 0.3s;
+                }
+                .search-ui-bg {
+                    width: 100vw;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--bg);
+                }
+                .search-ui-form {
+                    background: var(--surface);
+                    border-radius: 18px;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+                    padding: 2.5rem 2.5rem 2rem 2.5rem;
+                    min-width: 420px;
+                    max-width: 480px;
+                    width: 100%;
+                }
+                .search-bar {
+                    display: flex;
+                    align-items: center;
+                    background: var(--gradient);
+                    border-radius: 40px;
+                    padding: 0.5rem 1rem;
+                    margin-bottom: 2rem;
+                }
+                .search-bar-input {
+                    flex: 1;
+                    border: none;
+                    outline: none;
+                    background: transparent;
+                    color: #fff;
+                    font-size: 1.3rem;
+                    padding: 1rem 1.2rem;
+                    border-radius: 40px;
+                }
+                .search-bar-btn {
+                    background: none;
+                    border: none;
+                    color: #fff;
+                    font-size: 2rem;
+                    cursor: pointer;
+                    margin-left: 0.5rem;
+                }
+                .search-icon {
+                    font-size: 2rem;
+                }
+                .advanced-search {
+                    background: var(--surface);
+                    border-radius: 12px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                    padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+                    margin-top: -1rem;
+                }
+                .advanced-title {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: var(--muted);
+                    margin-bottom: 1.2rem;
+                    display: block;
+                }
+                .advanced-filters {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                    margin-bottom: 1.2rem;
+                }
+                .advanced-filters select {
+                    background: #e0e0e0;
+                    border: none;
+                    border-radius: 24px;
+                    padding: 0.7rem 1.5rem;
+                    font-size: 1rem;
+                    color: #555;
+                    min-width: 120px;
+                    appearance: none;
+                    outline: none;
+                    box-shadow: none;
+                }
+                .advanced-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 1.2rem;
+                    margin-top: 0.5rem;
+                }
+                #results-count {
+                    font-size: 1rem;
+                    color: var(--muted);
+                }
+                .reset-btn {
+                    background: none;
+                    border: none;
+                    color: var(--muted);
+                    font-size: 1rem;
+                    cursor: pointer;
+                    margin-right: 0.5rem;
+                }
+                .search-btn-gradient {
+                    background: var(--gradient);
+                    color: #fff;
+                    border: none;
+                    border-radius: 24px;
+                    padding: 0.7rem 2.2rem;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    box-shadow: 0 2px 8px rgba(211,47,47,0.10);
+                    transition: background 0.3s;
+                }
+                .search-btn-gradient:hover {
+                    filter: brightness(1.1);
+                }
+                @media (max-width: 600px) {
+                    .search-ui-form {
+                        min-width: 0;
+                        max-width: 98vw;
+                        padding: 1.2rem 0.5rem 1rem 0.5rem;
+                    }
+                    .advanced-filters {
+                        flex-direction: column;
+                        gap: 0.7rem;
+                    }
                 }
                 header {
                     background: var(--primary);
@@ -112,13 +235,13 @@
             </main>
 
             <script>
+                // UI mode logic (conserve)
                 let currentMode = 'citizen';
                 const hints = {
                     citizen: "Recherche générale pour tous les citoyens",
                     student: "Analyse adaptée au contexte universitaire et étudiant",
                     pro: "Analyse stratégique pour entreprises et organisations"
                 };
-
                 function setMode(mode) {
                     currentMode = mode;
                     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -126,29 +249,38 @@
                     document.getElementById('mode-hint').textContent = hints[mode];
                 }
 
-                function handleEnter(e) {
-                    if (e.key === 'Enter') ask();
+                // RESET button logic for advanced search
+                function resetFilters() {
+                    document.getElementById('filter1').selectedIndex = 0;
+                    document.getElementById('filter2').selectedIndex = 0;
+                    document.getElementById('filter3').selectedIndex = 0;
+                    document.getElementById('filter4').selectedIndex = 0;
+                    document.getElementById('filter5').selectedIndex = 0;
+                    document.getElementById('filter6').selectedIndex = 0;
+                    document.getElementById('query').value = '';
+                    document.getElementById('results-count').textContent = '108 results'; // valeur mockée
                 }
 
+                // SEARCH logic (mock: update results count)
                 async function ask() {
                     const query = document.getElementById('query').value.trim();
-                    if (!query) return alert('Entrez une question !');
+                    // Ici, on peut calculer dynamiquement le nombre de résultats (mock)
+                    let count = 108;
+                    if (query.length > 0) count = Math.max(1, 108 - query.length * 2);
+                    document.getElementById('results-count').textContent = `${count} results`;
 
                     document.getElementById('loader').style.display = 'block';
                     document.getElementById('results').style.display = 'none';
 
                     try {
-                        // À ADAPTER quand backend en ligne : changer l'URL (ex. https://ton-backend.com/${currentMode}/ask)
+                        // Backend call (conserve logique existante)
                         const res = await fetch(`http://127.0.0.1:9000/${currentMode}/ask`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ question: query })
                         });
-
                         if (!res.ok) throw new Error('Erreur serveur');
-
                         const data = await res.json();
-
                         let html = '<h2>Réponse de Canadia</h2>';
                         if (data.title) html += `<strong>🧠 ${data.title}</strong><br><br>`;
                         if (data.summary) html += `<strong>Résumé :</strong><br>${data.summary}<br><br>`;
@@ -158,7 +290,6 @@
                         if (data.sources?.length) html += `<strong>Sources :</strong><ul><li>${data.sources.join('</li><li>')}</li></ul><br>`;
                         if (data.limits) html += `<strong>Limites :</strong><br>${data.limits}<br><br>`;
                         if (data.disclaimer) html += `<em>${data.disclaimer}</em>`;
-
                         document.getElementById('results').innerHTML = html || 'Aucune réponse structurée.';
                         document.getElementById('results').style.display = 'block';
                     } catch (err) {
@@ -166,7 +297,6 @@
                         document.getElementById('results').style.display = 'block';
                     } finally {
                         document.getElementById('loader').style.display = 'none';
-                        document.getElementById('query').value = '';
                     }
                 }
 
@@ -345,17 +475,34 @@
     </select>
     <div id="news-container" class="loading">
         Chargement des actualités…
-    </div>
-
-    <!-- Canadia Pro Dashboard Section -->
-    <section class="dashboard">
-      <h2>Bienvenue sur Canadia Pro</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Structure actuelle</h3>
-          <p>Organisation fonctionnelle – 12 employés</p>
+    <main>
+        <div class="search-ui-bg">
+            <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
+                <div class="search-bar">
+                    <input type="text" id="query" class="search-bar-input" placeholder="Type Keywords" />
+                    <button type="submit" class="search-bar-btn" aria-label="Rechercher"><span class="search-icon">🔍</span></button>
+                </div>
+                <div class="advanced-search">
+                    <span class="advanced-title">ADVANCED SEARCH</span>
+                    <div class="advanced-filters">
+                        <select id="filter1"><option>Accessories</option></select>
+                        <select id="filter2"><option>Color</option></select>
+                        <select id="filter3"><option>Size</option></select>
+                        <select id="filter4"><option>Sale</option></select>
+                        <select id="filter5"><option>Time</option></select>
+                        <select id="filter6"><option>Type</option></select>
+                    </div>
+                    <div class="advanced-actions">
+                        <span id="results-count">108 results</span>
+                        <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
+                        <button type="submit" class="search-btn-gradient">SEARCH</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="card">
+        <div id="loader">Canadia réfléchit... ⏳</div>
+        <div id="results"></div>
+    </main>
           <h3>Problèmes détectés</h3>
           <p>Communication interne, priorités floues</p>
         </div>
