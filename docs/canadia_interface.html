@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,21 +12,24 @@
                         --secondary: #328cc1;
                         --accent: #d9b310;
                         --bg: #f8f9fc;
-                        --card: #ffffff;
+                        --surface: #ffffff;
                         --text: #1a1a1a;
                         --muted: #666666;
                 }
                 body.dark {
-                        --bg: #121212;
-                        --card: #1e1e1e;
-                        --text: #f0f0f0;
-                        --muted: #aaaaaa;
+                        --bg: #0f172a;
+                        --surface: #1e293b;
+                        --text: #f1f5f9;
+                        --muted: #94a3b8;
                 }
                 body {
                         margin: 0;
                         font-family: system-ui, -apple-system, sans-serif;
                         background: var(--bg);
                         color: var(--text);
+                        min-height: 100vh;
+                        display: flex;
+                        flex-direction: column;
                         transition: background 0.3s, color 0.3s;
                 }
                 header {
@@ -33,226 +37,73 @@
                         color: white;
                         padding: 1.5rem;
                         text-align: center;
-                        font-size: 1.8rem;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                }
+                .title {
+                        font-size: 2rem;
                         font-weight: 600;
-                        position: relative;
+                        margin: 0;
                 }
-                #theme-toggle {
-                        position: absolute;
-                        right: 1.5rem;
-                        top: 1.5rem;
-                        background: none;
-                        border: none;
-                        color: white;
-                        font-size: 1.5rem;
-                        cursor: pointer;
-                }
-                main {
-                        max-width: 900px;
-                        margin: 2rem auto;
-                        padding: 0 1rem;
-                }
-                .card {
-                        background: var(--card);
-                        border-radius: 12px;
-                        padding: 1.5rem;
-                        margin-bottom: 2rem;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-                }
-                h2 {
-                        margin-top: 0;
-                        color: var(--primary);
-                }
-                .mode-buttons {
+                .mode-selector {
                         display: flex;
+                        justify-content: center;
                         gap: 1rem;
-                        margin-bottom: 1rem;
+                        margin-top: 1.5rem;
+                        flex-wrap: wrap;
                 }
-                .mode-buttons button {
-                        flex: 1;
-                        padding: 1rem;
+                .mode-btn {
+                        padding: 0.8rem 1.8rem;
                         font-size: 1.1rem;
-                        border: 2px solid var(--secondary);
-                        background: var(--card);
-                        color: var(--secondary);
-                        border-radius: 8px;
+                        background: rgba(255,255,255,0.2);
+                        border: none;
+                        border-radius: 50px;
+                        color: white;
                         cursor: pointer;
                         transition: all 0.3s;
                 }
-                .mode-buttons button.active {
-                        background: var(--secondary);
-                        color: white;
+                .mode-btn.active {
+                        background: white;
+                        color: var(--primary);
+                        font-weight: 600;
                 }
-                #chat-container {
-                        max-height: 60vh;
-                        overflow-y: auto;
-                        margin-bottom: 1rem;
-                        padding: 1rem;
-                        background: var(--bg);
-                        border-radius: 8px;
-                }
-                .message {
-                        margin-bottom: 1rem;
-                        padding: 1rem;
-                        border-radius: 12px;
-                        max-width: 80%;
-                }
-                .user-message {
-                        background: var(--secondary);
-                        color: white;
-                        align-self: flex-end;
-                        margin-left: auto;
-                }
-                .ai-message {
-                        background: #e9ecef;
-                        align-self: flex-start;
-                }
-                body.dark .ai-message {
-                        background: #2c2c2c;
-                }
-                #input-container {
-                        display: flex;
-                        gap: 1rem;
-                }
-                textarea {
+                main {
                         flex: 1;
-                        padding: 1rem;
-                        border: 1px solid #ccc;
-                        border-radius: 8px;
-                        font-size: 1rem;
-                        background: var(--card);
-                        color: var(--text);
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 2rem;
                 }
-                button.primary {
-                        padding: 1rem 2rem;
+                .search-container {
+                        width: 100%;
+                        max-width: 800px;
+                        text-align: center;
+                }
+                .search-box {
+                        width: 100%;
+                        padding: 1.2rem 1.5rem;
+                        font-size: 1.3rem;
+                        border: 3px solid var(--secondary);
+                        border-radius: 50px;
+                        background: var(--surface);
+                        color: var(--text);
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+                        outline: none;
+                        transition: border-color 0.3s;
+                }
+                .search-box:focus {
+                        border-color: var(--accent);
+                }
+                .search-btn {
+                        margin-top: 1.5rem;
+                        padding: 1rem 3rem;
+                        font-size: 1.2rem;
                         background: var(--primary);
                         color: white;
                         border: none;
-                        border-radius: 8px;
+                        border-radius: 50px;
                         cursor: pointer;
-                        font-size: 1rem;
-                        transition: background 0.3s;
-                }
-                button.primary:hover {
-                        background: var(--accent);
-                }
-                #loader {
-                        text-align: center;
-                        padding: 2rem;
-                        color: var(--muted);
-                        font-size: 1.2rem;
-                        display: none;
-                }
-        </style>
-</head>
-<body>
-        <header>
-                Canadia — Comprendre. Structurer. Décider.
-                <button id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
-        </header>
-        <main>
-                <div class="card">
-                        <h2>Choisissez votre mode</h2>
-                        <div class="mode-buttons">
-                                <button onclick="setMode('citizen')" class="active">Citoyen</button>
-                                <button onclick="setMode('student')">Étudiant</button>
-                                <button onclick="setMode('pro')">Entreprise</button>
-                        </div>
-                        <div id="context-card" style="display:none; margin-top:1rem;">
-                                <label for="context">Contexte spécifique</label>
-                                <select id="context">
-                                        <option value="general">Général</option>
-                                        <option value="universite">Université</option>
-                                        <option value="entreprise">Entreprise</option>
-                                </select>
-                        </div>
-                </div>
-
-                <div class="card">
-                        <h2>Votre conversation avec Canadia</h2>
-                        <div id="chat-container"></div>
-                        <div id="input-container">
-                                <textarea id="question" placeholder="Posez votre question..." rows="3"></textarea>
-                                <button class="primary" onclick="ask()">Envoyer</button>
-                        </div>
-                        <button class="primary" onclick="newConversation()" style="margin-top:1rem; width:100%;">Nouvelle conversation</button>
-                </div>
-
-                <div id="loader">Canadia réfléchit... ⏳</div>
-        </main>
-
-        <script>
-                let mode = "citizen";
-                let conversation = [];
-
-                function setMode(m) {
-                        mode = m;
-                        document.querySelectorAll('.mode-buttons button').forEach(b => b.classList.remove('active'));
-                        document.querySelector(`button[onclick=\"setMode('${m}')\"]`).classList.add('active');
-                        document.getElementById('context-card').style.display = (m === "student" || m === "pro") ? "block" : "none";
-                }
-
-                function renderChat() {
-                        const container = document.getElementById('chat-container');
-                        container.innerHTML = '';
-                        conversation.forEach(msg => {
-                                const div = document.createElement('div');
-                                div.className = `message ${msg.role}-message`;
-                                if (msg.role === 'user') {
-                                        div.textContent = msg.content;
-                                } else {
-                                        div.innerHTML = msg.content; // Permet HTML structuré (résumé, points clés, etc.)
-                                }
-                                container.appendChild(div);
-                        });
-                        container.scrollTop = container.scrollHeight;
-                }
-
-                async function ask() {
-                        const question = document.getElementById('question').value.trim();
-                        if (!question) return alert('Entrez une question !');
-
-                        conversation.push({ role: 'user', content: question });
-                        renderChat();
-                        document.getElementById('question').value = '';
-                        document.getElementById('loader').style.display = 'block';
-
-                        try {
-                                const context = document.getElementById('context')?.value || 'general';
-                                const res = await fetch(`http://127.0.0.1:9000/${mode}/ask`, {  // À adapter quand backend en ligne
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ question, context })
-                                });
-                                const data = await res.json();
-                                let response = '<strong>Résumé :</strong> ' + (data.summary || 'Pas de résumé.') + '<br><br>';
-                                if (data.key_points) response += '<strong>Points clés :</strong><ul><li>' + data.key_points.join('</li><li>') + '</li></ul>';
-                                conversation.push({ role: 'assistant', content: response });
-                                renderChat();
-                        } catch (e) {
-                                conversation.push({ role: 'assistant', content: 'Erreur : backend non accessible.' });
-                                renderChat();
-                        } finally {
-                                document.getElementById('loader').style.display = 'none';
-                        }
-                }
-
-                function newConversation() {
-                        conversation = [];
-                        renderChat();
-                }
-
-                // Thème
-                document.getElementById('theme-toggle').onclick = () => {
-                        document.body.classList.toggle('dark');
-                        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-                };
-                if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
-
-                renderChat();
-        </script>
-</body>
-</html>
+                        box-shadow: 0 6px
                     function setMode(m) {
                             mode = m;
                             ["citizen", "student", "pro"].forEach(x => {
