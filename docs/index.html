@@ -48,41 +48,46 @@
             background: white;
             border-radius: 6px;
             padding: 1rem;
-            margin-top: 2rem;
-            border-left: 4px solid #007bff;
-        }
-
-        .dashboard h2 {
-            margin-top: 0;
-        }
-
-        .cards {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            background: #f0f8ff;
-            border: 1px solid #007bff;
-            border-radius: 4px;
-            padding: 1rem;
-            margin: 0.5rem;
-            flex: 1 1 calc(33.333% - 1rem);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 600px) {
-            .card {
-                flex: 1 1 100%;
-            }
-        }
-
-        /* Canadia Pro Diagnostic Styles */
-        .diagnostic {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
+            </header>
+            <body>
+                <div class="search-container">
+                    <div class="main-search">
+                        <input type="text" placeholder="Type Keywords">
+                        <button>🔍</button>
+                    </div>
+                    <div class="advanced-search">
+                        <div class="advanced-title">Advanced Search</div>
+                        <div class="filters">
+                            <select>
+                                <option>Accessories</option>
+                            </select>
+                            <select>
+                                <option>Color</option>
+                            </select>
+                            <select>
+                                <option>Size</option>
+                            </select>
+                            <select>
+                                <option>Sale</option>
+                            </select>
+                            <select>
+                                <option>Time</option>
+                            </select>
+                            <select>
+                                <option>Type</option>
+                            </select>
+                        </div>
+                        <div class="results-actions">
+                            <div class="results-count">108 results</div>
+                            <div class="action-buttons">
+                                <button class="reset">Reset</button>
+                                <button class="search">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
             margin-top: 2rem;
             border-left: 4px solid #28a745;
         }
