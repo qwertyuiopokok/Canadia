@@ -3,107 +3,157 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Canadia — Comprendre. Structurer. Décider.</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Canadia - Recherche Avancée</title>
         <style>
-                :root {
-                        --primary: #0b3c5d;
-                        --secondary: #328cc1;
-                        --accent: #d9b310;
-                        --bg: #f8f9fc;
-                        --surface: #ffffff;
-                        --text: #1a1a1a;
-                        --muted: #666666;
-                }
-                body.dark {
-                        --bg: #0f172a;
-                        --surface: #1e293b;
-                        --text: #f1f5f9;
-                        --muted: #94a3b8;
-                }
                 body {
                         margin: 0;
                         font-family: system-ui, -apple-system, sans-serif;
-                        background: var(--bg);
-                        color: var(--text);
-                        min-height: 100vh;
-                        display: flex;
-                        flex-direction: column;
-                        transition: background 0.3s, color 0.3s;
-                }
-                header {
-                        background: var(--primary);
-                        color: white;
-                        padding: 1.5rem;
-                        text-align: center;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                }
-                .title {
-                        font-size: 2rem;
-                        font-weight: 600;
-                        margin: 0;
-                }
-                .mode-selector {
+                        background: #e0f7fa; /* Fond cyan clair comme l'image */
                         display: flex;
                         justify-content: center;
-                        gap: 1rem;
-                        margin-top: 1.5rem;
-                        flex-wrap: wrap;
-                }
-                .mode-btn {
-                        padding: 0.8rem 1.8rem;
-                        font-size: 1.1rem;
-                        background: rgba(255,255,255,0.2);
-                        border: none;
-                        border-radius: 50px;
-                        color: white;
-                        cursor: pointer;
-                        transition: all 0.3s;
-                }
-                .mode-btn.active {
-                        background: white;
-                        color: var(--primary);
-                        font-weight: 600;
-                }
-                main {
-                        flex: 1;
-                        display: flex;
-                        flex-direction: column;
                         align-items: center;
-                        justify-content: center;
-                        padding: 2rem;
+                        min-height: 100vh;
+                        padding: 20px;
+                        box-sizing: border-box;
                 }
                 .search-container {
                         width: 100%;
                         max-width: 800px;
-                        text-align: center;
+                        background: white;
+                        border-radius: 20px;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                        overflow: hidden;
                 }
-                .search-box {
-                        width: 100%;
-                        padding: 1.2rem 1.5rem;
-                        font-size: 1.3rem;
-                        border: 3px solid var(--secondary);
-                        border-radius: 50px;
-                        background: var(--surface);
-                        color: var(--text);
-                        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-                        outline: none;
-                        transition: border-color 0.3s;
+                .main-search {
+                        display: flex;
+                        align-items: center;
+                        padding: 20px;
+                        background: linear-gradient(to right, #2979ff, #d50000); /* Gradient bleu → rouge */
                 }
-                .search-box:focus {
-                        border-color: var(--accent);
-                }
-                .search-btn {
-                        margin-top: 1.5rem;
-                        padding: 1rem 3rem;
+                .main-search input {
+                        flex: 1;
+                        padding: 18px 24px;
                         font-size: 1.2rem;
-                        background: var(--primary);
+                        border: none;
+                        border-radius: 50px;
+                        background: white;
+                        margin-right: 15px;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                }
+                .main-search button {
+                        background: #d50000;
+                        color: white;
+                        border: none;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                }
+                .advanced-search {
+                        padding: 30px;
+                }
+                .advanced-title {
+                        text-transform: uppercase;
+                        color: #666;
+                        font-size: 0.9rem;
+                        margin-bottom: 20px;
+                        font-weight: 600;
+                }
+                .filters {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 15px;
+                        margin-bottom: 30px;
+                }
+                @media (max-width: 600px) {
+                        .filters {
+                                grid-template-columns: 1fr;
+                        }
+                }
+                select {
+                        padding: 12px 16px;
+                        border: none;
+                        border-radius: 50px;
+                        background: #f0f0f0;
+                        font-size: 1rem;
+                        box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+                }
+                .results-actions {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                }
+                .results-count {
+                        color: #666;
+                        font-weight: 600;
+                }
+                .action-buttons {
+                        display: flex;
+                        gap: 15px;
+                }
+                button.reset {
+                        background: none;
+                        border: none;
+                        color: #666;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        text-transform: uppercase;
+                }
+                button.search {
+                        padding: 12px 30px;
+                        background: linear-gradient(to right, #2979ff, #d50000);
                         color: white;
                         border: none;
                         border-radius: 50px;
+                        font-size: 1rem;
                         cursor: pointer;
-                        box-shadow: 0 6px
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                }
+        </style>
+</head>
+<body>
+        <div class="search-container">
+                <div class="main-search">
+                        <input type="text" placeholder="Type Keywords">
+                        <button>🔍</button>
+                </div>
+                <div class="advanced-search">
+                        <div class="advanced-title">Advanced Search</div>
+                        <div class="filters">
+                                <select>
+                                        <option>Accessories</option>
+                                </select>
+                                <select>
+                                        <option>Color</option>
+                                </select>
+                                <select>
+                                        <option>Size</option>
+                                </select>
+                                <select>
+                                        <option>Sale</option>
+                                </select>
+                                <select>
+                                        <option>Time</option>
+                                </select>
+                                <select>
+                                        <option>Type</option>
+                                </select>
+                        </div>
+                        <div class="results-actions">
+                                <div class="results-count">108 results</div>
+                                <div class="action-buttons">
+                                        <button class="reset">Reset</button>
+                                        <button class="search">Search</button>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</body>
+</html>
                     function setMode(m) {
                             mode = m;
                             ["citizen", "student", "pro"].forEach(x => {
