@@ -484,129 +484,32 @@
 </header>
 
 <main>
-    <label for="province-select">Province :</label>
-    <select id="province-select">
-      <option value="QC">Québec</option>
-      <option value="ON">Ontario</option>
-      <option value="BC">Colombie-Britannique</option>
-    </select>
-    <div id="news-container" class="loading">
-        Chargement des actualités…
-    <main>
         <div class="search-ui-bg">
-            <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
-                <div class="search-bar">
-                    <input type="text" id="query" class="search-bar-input" placeholder="Type Keywords" />
-                    <button type="submit" class="search-bar-btn" aria-label="Rechercher"><span class="search-icon">🔍</span></button>
-                </div>
-                <div class="advanced-search">
-                    <span class="advanced-title">ADVANCED SEARCH</span>
-                    <div class="advanced-filters">
-                        <select id="filter1"><option>Accessories</option></select>
-                        <select id="filter2"><option>Color</option></select>
-                        <select id="filter3"><option>Size</option></select>
-                        <select id="filter4"><option>Sale</option></select>
-                        <select id="filter5"><option>Time</option></select>
-                        <select id="filter6"><option>Type</option></select>
-                    </div>
-                    <div class="advanced-actions">
-                        <span id="results-count">108 results</span>
-                        <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
-                        <button type="submit" class="search-btn-gradient">SEARCH</button>
-                    </div>
-                </div>
-            </form>
+                <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
+                        <div class="search-bar">
+                                <input type="text" id="query" class="search-bar-input" placeholder="Type Keywords" onkeypress="handleEnter(event)" />
+                                <button type="submit" class="search-bar-btn" aria-label="Rechercher"><span class="search-icon">🔍</span></button>
+                        </div>
+                        <div class="advanced-search">
+                                <span class="advanced-title">ADVANCED SEARCH</span>
+                                <div class="advanced-filters">
+                                        <select id="filter1"><option>Accessories</option></select>
+                                        <select id="filter2"><option>Color</option></select>
+                                        <select id="filter3"><option>Size</option></select>
+                                        <select id="filter4"><option>Sale</option></select>
+                                        <select id="filter5"><option>Time</option></select>
+                                        <select id="filter6"><option>Type</option></select>
+                                </div>
+                                <div class="advanced-actions">
+                                        <span id="results-count">108 results</span>
+                                        <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
+                                        <button type="submit" class="search-btn-gradient">SEARCH</button>
+                                </div>
+                        </div>
+                </form>
         </div>
-        <div id="loader">Canadia réfléchit... ⏳</div>
+        <div id="loader">Canadia recherche en temps réel... ⏳</div>
         <div id="results"></div>
-    </main>
-          <h3>Problèmes détectés</h3>
-          <p>Communication interne, priorités floues</p>
-        </div>
-        <div class="card">
-          <h3>Dernière analyse</h3>
-          <p>Il y a 3 jours</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Canadia Pro Diagnostic Section -->
-    <section class="diagnostic">
-      <h2>Diagnostic organisationnel</h2>
-      <label>
-        Quelle est la taille de votre entreprise ?
-        <select>
-          <option>1–5</option>
-          <option>6–20</option>
-          <option>21–100</option>
-          <option>100+</option>
-        </select>
-      </label>
-      <label>
-        Quels sont vos principaux défis actuels ?
-        <textarea></textarea>
-      </label>
-      <button>Continuer</button>
-    </section>
-
-    <!-- Canadia Pro Analyse Stratégique Section -->
-    <section class="ask-pro">
-      <h2>Analyse stratégique</h2>
-      <p><strong>Contexte entreprise :</strong> PME – services – Québec</p>
-      <textarea placeholder="Décrivez votre situation ou votre question..."></textarea>
-      <button>Analyser</button>
-    </section>
-
-    <!-- Canadia Pro Résultat d'Analyse Stratégique Section -->
-    <section class="pro-result">
-      <h2>Résultat de l’analyse</h2>
-      <ol>
-        <li><strong>Diagnostic</strong></li>
-        <li><strong>Hypothèses</strong></li>
-        <li><strong>Options possibles</strong></li>
-        <li><strong>Plan d’action</strong></li>
-        <li><strong>Points de vigilance</strong></li>
-      </ol>
-      <div class="pro-answer">
-        <!-- La réponse générée par l’IA s’affichera ici -->
-      </div>
-    </section>
-
-    <!-- Canadia Pro Exemple de Réponse Structurée Section -->
-    <section class="response">
-      <h3>Diagnostic</h3>
-      <p>La structure actuelle montre un chevauchement des responsabilités...</p>
-      <h3>Options possibles</h3>
-      <ul>
-        <li>Clarifier les rôles</li>
-        <li>Créer un point de coordination</li>
-      </ul>
-    </section>
-
-    <!-- Canadia Pro Plan d’Action Proposé Section -->
-    <section class="action-plan">
-      <h2>Plan d’action proposé</h2>
-      <ol>
-        <li>Clarifier les responsabilités clés</li>
-        <li>Mettre en place une réunion hebdomadaire</li>
-        <li>Documenter les processus critiques</li>
-      </ol>
-    </section>
-
-    <!-- Canadia Pro Historique des Analyses Section -->
-    <section class="history">
-      <h2>Historique</h2>
-      <ul>
-        <li>Analyse – Communication interne (12 mai)</li>
-        <li>Diagnostic – Structure (8 mai)</li>
-      </ul>
-    </section>
-
-    <!-- Disclaimer Canadia Pro -->
-    <small class="disclaimer">
-    Canadia Pro est un outil d’aide à la structuration et à la réflexion stratégique.
-    Il ne fournit aucun conseil financier, fiscal ou juridique.
-    </small>
 </main>
 
 <script src="main.js"></script>
