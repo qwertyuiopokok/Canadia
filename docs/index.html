@@ -6,512 +6,306 @@
     <title>Canadia — Comprendre. Structurer. Décider.</title>
     <style>
         :root {
-            --primary: #d32f2f;     /* Rouge canadien */
+            --primary: #d32f2f;
             --secondary: #f44336;
-            --bg: #ffffff;
-            --surface: #f8f9fa;
+            --blue: #3a8dde;
+            --accent: #ffeb3b;
+            --bg: #e3f2fd;
+            --surface: #ffffff;
             --text: #212121;
             --muted: #666666;
+            --gradient: linear-gradient(90deg, #3a8dde 0%, #d32f2f 100%);
         }
-        <!DOCTYPE html>
-        <html lang="fr">
-        <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Canadia — Comprendre. Structurer. Décider.</title>
-            <style>
-                :root {
-                    --primary: #d32f2f;
-                    --secondary: #f44336;
-                    --accent: #ffeb3b;
-                    --bg: #e3f2fd;
-                    --surface: #fff;
-                    --text: #212121;
-                    --muted: #666666;
-                    --gradient: linear-gradient(90deg, #3a8dde 0%, #d32f2f 100%);
-                }
-                body.dark {
-                    --bg: #121212;
-                    --surface: #1e1e1e;
-                    --text: #f5f5f5;
-                    --muted: #aaaaaa;
-                }
-                body {
-                    margin: 0;
-                    font-family: system-ui, -apple-system, sans-serif;
-                    background: var(--bg);
-                    color: var(--text);
-                    min-height: 100vh;
-                    display: flex;
-                    flex-direction: column;
-                    transition: all 0.3s;
-                }
-                .search-ui-bg {
-                    width: 100vw;
-                    min-height: 100vh;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: var(--bg);
-                }
-                .search-ui-form {
-                    background: var(--surface);
-                    border-radius: 18px;
-                    box-shadow: 0 8px 30px rgba(0,0,0,0.10);
-                    padding: 2.5rem 2.5rem 2rem 2.5rem;
-                    min-width: 420px;
-                    max-width: 480px;
-                    width: 100%;
-                }
-                .search-bar {
-                    display: flex;
-                    align-items: center;
-                    background: var(--gradient);
-                    border-radius: 40px;
-                    padding: 0.5rem 1rem;
-                    margin-bottom: 2rem;
-                }
-                .search-bar-input {
-                    flex: 1;
-                    border: none;
-                    outline: none;
-                    background: transparent;
-                    color: #fff;
-                    font-size: 1.3rem;
-                    padding: 1rem 1.2rem;
-                    border-radius: 40px;
-                }
-                .search-bar-btn {
-                    background: none;
-                    border: none;
-                    color: #fff;
-                    font-size: 2rem;
-                    cursor: pointer;
-                    margin-left: 0.5rem;
-                }
-                .search-icon {
-                    font-size: 2rem;
-                }
-                .advanced-search {
-                    background: var(--surface);
-                    border-radius: 12px;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-                    padding: 1.5rem 1.2rem 1.2rem 1.2rem;
-                    margin-top: -1rem;
-                }
-                .advanced-title {
-                    font-size: 1rem;
-                    font-weight: 600;
-                    color: var(--muted);
-                    margin-bottom: 1.2rem;
-                    display: block;
-                }
-                .advanced-filters {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 1rem;
-                    margin-bottom: 1.2rem;
-                }
-                .advanced-filters select {
-                    background: #e0e0e0;
-                    border: none;
-                    border-radius: 24px;
-                    padding: 0.7rem 1.5rem;
-                    font-size: 1rem;
-                    color: #555;
-                    min-width: 120px;
-                    appearance: none;
-                    outline: none;
-                    box-shadow: none;
-                }
-                .advanced-actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 1.2rem;
-                    margin-top: 0.5rem;
-                }
-                #results-count {
-                    font-size: 1rem;
-                    color: var(--muted);
-                }
-                .reset-btn {
-                    background: none;
-                    border: none;
-                    color: var(--muted);
-                    font-size: 1rem;
-                    cursor: pointer;
-                    margin-right: 0.5rem;
-                }
-                .search-btn-gradient {
-                    background: var(--gradient);
-                    color: #fff;
-                    border: none;
-                    border-radius: 24px;
-                    padding: 0.7rem 2.2rem;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    box-shadow: 0 2px 8px rgba(211,47,47,0.10);
-                    transition: background 0.3s;
-                }
-                .search-btn-gradient:hover {
-                    filter: brightness(1.1);
-                }
-                @media (max-width: 600px) {
-                    .search-ui-form {
-                        min-width: 0;
-                        max-width: 98vw;
-                        padding: 1.2rem 0.5rem 1rem 0.5rem;
-                    }
-                    .advanced-filters {
-                        flex-direction: column;
-                        gap: 0.7rem;
-                    }
-                }
-                header {
-                    background: var(--primary);
-                    color: white;
-                    padding: 2rem 1rem;
-                    text-align: center;
-                }
-                .title { font-size: 2.8rem; font-weight: 700; margin: 0; }
-                .subtitle { font-size: 1.2rem; opacity: 0.9; margin: 0.5rem 0 2rem; }
-                .mode-selector { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-                .mode-btn {
-                    padding: 0.8rem 2rem; background: rgba(255,255,255,0.2); border: none; border-radius: 50px;
-                    color: white; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;
-                }
-                .mode-btn.active { background: white; color: var(--primary); font-weight: 600; }
-                main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
-                .search-container { width: 100%; max-width: 800px; text-align: center; }
-                .search-box {
-                    width: 100%; padding: 1.5rem 2rem; font-size: 1.4rem; border: 4px solid var(--secondary);
-                    border-radius: 50px; background: var(--surface); color: var(--text);
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.1); outline: none;
-                }
-                .search-box:focus { border-color: var(--accent); }
-                .search-btn {
-                    margin-top: 2rem; padding: 1.2rem 4rem; font-size: 1.3rem; background: var(--primary);
-                    color: white; border: none; border-radius: 50px; cursor: pointer;
-                    box-shadow: 0 8px 25px rgba(211,47,47,0.3); transition: all 0.3s;
-                }
-                .search-btn:hover { background: var(--secondary); }
-                #theme-toggle { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: white; }
-                .hint { margin-top: 1.5rem; font-size: 1.1rem; color: var(--muted); }
-                #loader { text-align: center; margin: 3rem; color: var(--muted); font-size: 1.4rem; display: none; }
-                #results {
-                    width: 100%; max-width: 800px; margin-top: 3rem; padding: 2rem;
-                    background: var(--surface); border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-                    line-height: 1.6;
-                }
-                #results h2 { color: var(--primary); margin-top: 0; }
-                #results strong { color: var(--primary); }
-                #results ul { padding-left: 1.5rem; }
-                #results li { margin-bottom: 0.5rem; }
-            </style>
-        </head>
-        <body>
-            <header>
-                <button id="theme-toggle" aria-label="Thème sombre/clair">🌙</button>
-                <h1 class="title">Canadia</h1>
-                <p class="subtitle">Comprendre. Structurer. Décider.</p>
-                <div class="mode-selector">
-                    <button class="mode-btn active" onclick="setMode('citizen')">Citoyen</button>
-                    <button class="mode-btn" onclick="setMode('student')">Étudiant</button>
-                    <button class="mode-btn" onclick="setMode('pro')">Entreprise</button>
-                </div>
-            </header>
-
-            <main>
-                <div class="search-ui-bg">
-                    <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
-                        <div class="search-bar">
-                            <input type="text" id="query" class="search-bar-input" placeholder="Type Keywords" onkeypress="handleEnter(event)" />
-                            <button type="submit" class="search-bar-btn" aria-label="Rechercher"><span class="search-icon">🔍</span></button>
-                        </div>
-                        <div class="advanced-search">
-                            <span class="advanced-title">ADVANCED SEARCH</span>
-                            <div class="advanced-filters">
-                                <select id="filter1"><option>Accessories</option></select>
-                                <select id="filter2"><option>Color</option></select>
-                                <select id="filter3"><option>Size</option></select>
-                                <select id="filter4"><option>Sale</option></select>
-                                <select id="filter5"><option>Time</option></select>
-                                <select id="filter6"><option>Type</option></select>
-                            </div>
-                            <div class="advanced-actions">
-                                <span id="results-count">108 results</span>
-                                <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
-                                <button type="submit" class="search-btn-gradient">SEARCH</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div id="loader">Canadia réfléchit... ⏳</div>
-                <div id="results"></div>
-            </main>
-
-            <script>
-                // UI mode logic (conserve)
-                let currentMode = 'citizen';
-                const hints = {
-                    citizen: "Recherche générale pour tous les citoyens",
-                    student: "Analyse adaptée au contexte universitaire et étudiant",
-                    pro: "Analyse stratégique pour entreprises et organisations"
-                };
-                function setMode(mode) {
-                    currentMode = mode;
-                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-                    event.target.classList.add('active');
-                    document.getElementById('mode-hint').textContent = hints[mode];
-                }
-
-                // RESET button logic for advanced search
-                function resetFilters() {
-                    document.getElementById('filter1').selectedIndex = 0;
-                    document.getElementById('filter2').selectedIndex = 0;
-                    document.getElementById('filter3').selectedIndex = 0;
-                    document.getElementById('filter4').selectedIndex = 0;
-                    document.getElementById('filter5').selectedIndex = 0;
-                    document.getElementById('filter6').selectedIndex = 0;
-                    document.getElementById('query').value = '';
-                    document.getElementById('results-count').textContent = '108 results'; // valeur mockée
-                }
-
-                // SEARCH logic (mock: update results count)
-                async function ask() {
-                    const query = document.getElementById('query').value.trim();
-                    // Ici, on peut calculer dynamiquement le nombre de résultats (mock)
-                    let count = 108;
-                    if (query.length > 0) count = Math.max(1, 108 - query.length * 2);
-                    document.getElementById('results-count').textContent = `${count} results`;
-
-                    document.getElementById('loader').style.display = 'block';
-                    document.getElementById('results').style.display = 'none';
-
-                    try {
-                        // Backend call (conserve logique existante)
-                        const res = await fetch(`http://127.0.0.1:9000/${currentMode}/ask`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ question: query })
-                        });
-                        if (!res.ok) throw new Error('Erreur serveur');
-                        const data = await res.json();
-                        let html = '<h2>Réponse de Canadia</h2>';
-                        if (data.title) html += `<strong>🧠 ${data.title}</strong><br><br>`;
-                        if (data.summary) html += `<strong>Résumé :</strong><br>${data.summary}<br><br>`;
-                        if (data.key_points?.length) html += `<strong>Points clés :</strong><ul><li>${data.key_points.join('</li><li>')}</li></ul><br>`;
-                        if (data.analysis) html += `<strong>Analyse :</strong><br>${data.analysis}<br><br>`;
-                        if (data.actions_or_reflections?.length) html += `<strong>Pour aller plus loin :</strong><ul><li>${data.actions_or_reflections.join('</li><li>')}</li></ul><br>`;
-                        if (data.sources?.length) html += `<strong>Sources :</strong><ul><li>${data.sources.join('</li><li>')}</li></ul><br>`;
-                        if (data.limits) html += `<strong>Limites :</strong><br>${data.limits}<br><br>`;
-                        if (data.disclaimer) html += `<em>${data.disclaimer}</em>`;
-                        document.getElementById('results').innerHTML = html || 'Aucune réponse structurée.';
-                        document.getElementById('results').style.display = 'block';
-                    } catch (err) {
-                        document.getElementById('results').innerHTML = `<strong style="color:red;">Erreur :</strong> ${err.message}<br><br>Le backend n'est pas accessible (normal si pas lancé localement ou hébergé).`;
-                        document.getElementById('results').style.display = 'block';
-                    } finally {
-                        document.getElementById('loader').style.display = 'none';
-                    }
-                }
-
-                document.getElementById('theme-toggle').onclick = () => {
-                    document.body.classList.toggle('dark');
-                    const isDark = document.body.classList.contains('dark');
-                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                    document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
-                };
-                if (localStorage.getItem('theme') === 'dark') {
-                    document.body.classList.add('dark');
-                    document.getElementById('theme-toggle').textContent = '☀️';
-                }
-            </script>
-        </body>
-        </html>
-
-        .diagnostic button:hover {
-            background: #218838;
+        body.dark {
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --text: #f5f5f5;
+            --muted: #aaaaaa;
         }
-
-        /* Canadia Pro Analyse Stratégique Styles */
-        .ask-pro {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 2rem;
-            border-left: 4px solid #17a2b8;
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-
-        .ask-pro h2 {
-            margin-top: 0;
-        }
-
-        .ask-pro textarea {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            height: 100px;
-        }
-
-        .ask-pro button {
-            background: #17a2b8;
+        header {
+            background: var(--primary);
             color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin: 0.5rem 0 2rem;
+        }
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(255,255,255,0.2);
             border: none;
-            padding: 0.7rem;
-            border-radius: 4px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mode-btn.active {
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .search-ui-form {
+            background: var(--surface);
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 520px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--gradient);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 2rem;
+        }
+        .search-bar-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+            font-size: 1.3rem;
+            padding: 1rem 1.2rem;
+        }
+        .search-bar-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
             cursor: pointer;
         }
-
-        .ask-pro button:hover {
-            background: #138496;
+        .advanced-search {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem 1.2rem;
+            margin-top: -1rem;
         }
-
-        /* Canadia Pro Résultat d'Analyse Stratégique Styles */
-        .pro-result {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 2rem;
-            border-left: 4px solid #ffc107;
+        .advanced-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
         }
-
-        .pro-result h2 {
-            margin-top: 0;
+        .advanced-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.2rem;
         }
-
-        .pro-result ol {
-            margin: 0;
-            padding-left: 1.5rem;
+        .advanced-filters select {
+            background: #e0e0e0;
+            border: none;
+            border-radius: 24px;
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+            color: #555;
         }
-
-        .pro-result li {
-            margin-bottom: 0.5rem;
+        .advanced-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .pro-answer {
-            background: #f8f9fa;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            padding: 0.5rem;
-            margin-top: 1rem;
+        #results-count {
+            font-size: 1rem;
+            color: var(--muted);
         }
-
-        /* Canadia Pro Exemple de Réponse Structurée Styles */
-        .response {
-            background: #e9ecef;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 2rem;
-            border-left: 4px solid #007bff;
+        .reset-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 1rem;
+            cursor: pointer;
         }
-
-        .response h3 {
-            margin-top: 0;
+        .search-btn-gradient {
+            background: var(--gradient);
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            padding: 0.7rem 2.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
         }
-
-        .response ul {
-            margin: 0;
-            padding-left: 1.5rem;
-        }
-
-        .response li {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Canadia Pro Plan d’Action Proposé Styles */
-        .action-plan {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 2rem;
-            border-left: 4px solid #dc3545;
-        }
-
-        .action-plan h2 {
-            margin-top: 0;
-        }
-
-        .action-plan ol {
-            margin: 0;
-            padding-left: 1.5rem;
-        }
-
-        .action-plan li {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Canadia Pro Historique Styles */
-        .history {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 2rem;
-            border-left: 4px solid #6c757d;
-        }
-
-        .history h2 {
-            margin-top: 0;
-        }
-
-        .history ul {
-            margin: 0;
-            padding-left: 1.5rem;
-        }
-
-        .history li {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Disclaimer Styles */
-        .disclaimer {
-            display: block;
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: #666;
+        #loader {
             text-align: center;
+            margin: 3rem;
+            color: var(--muted);
+            font-size: 1.4rem;
+            display: none;
+        }
+        #results {
+            width: 100%;
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        #theme-toggle {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: white;
+        }
+        @media (max-width: 600px) {
+            .advanced-filters {
+                grid-template-columns: 1fr;
+            }
+            .title {
+                font-size: 2.2rem;
+            }
         }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>Canadia</h1>
-    <p>Actualités citoyennes du jour</p>
-</header>
-
-<main>
-        <div class="search-ui-bg">
-                <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
-                        <div class="search-bar">
-                                <input type="text" id="query" class="search-bar-input" placeholder="Type Keywords" onkeypress="handleEnter(event)" />
-                                <button type="submit" class="search-bar-btn" aria-label="Rechercher"><span class="search-icon">🔍</span></button>
-                        </div>
-                        <div class="advanced-search">
-                                <span class="advanced-title">ADVANCED SEARCH</span>
-                                <div class="advanced-filters">
-                                        <select id="filter1"><option>Accessories</option></select>
-                                        <select id="filter2"><option>Color</option></select>
-                                        <select id="filter3"><option>Size</option></select>
-                                        <select id="filter4"><option>Sale</option></select>
-                                        <select id="filter5"><option>Time</option></select>
-                                        <select id="filter6"><option>Type</option></select>
-                                </div>
-                                <div class="advanced-actions">
-                                        <span id="results-count">108 results</span>
-                                        <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
-                                        <button type="submit" class="search-btn-gradient">SEARCH</button>
-                                </div>
-                        </div>
-                </form>
+    <header>
+        <button id="theme-toggle" aria-label="Thème sombre/clair">🌙</button>
+        <h1 class="title">Canadia</h1>
+        <p class="subtitle">Comprendre. Structurer. Décider.</p>
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('citizen')">Citoyen</button>
+            <button class="mode-btn" onclick="setMode('student')">Étudiant</button>
+            <button class="mode-btn" onclick="setMode('pro')">Entreprise</button>
         </div>
-        <div id="loader">Canadia recherche en temps réel... ⏳</div>
-        <div id="results"></div>
-</main>
+    </header>
 
-<script src="main.js"></script>
+    <main>
+        <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
+            <div class="search-bar">
+                <input type="text" id="query" class="search-bar-input" placeholder="Posez votre question ici..." onkeypress="handleEnter(event)" />
+                <button type="submit" class="search-bar-btn">🔍</button>
+            </div>
+            <div class="advanced-search">
+                <span class="advanced-title">RECHERCHE AVANCÉE</span>
+                <div class="advanced-filters">
+                    <select><option>Catégorie</option></select>
+                    <select><option>Région</option></select>
+                    <select><option>Date</option></select>
+                    <select><option>Source</option></select>
+                    <select><option>Type</option></select>
+                    <select><option>Priorité</option></select>
+                </div>
+                <div class="advanced-actions">
+                    <span id="results-count">Résultats en temps réel</span>
+                    <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
+                    <button type="submit" class="search-btn-gradient">RECHERCHER</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="loader">Canadia recherche... ⏳</div>
+        <div id="results"></div>
+    </main>
+
+    <script>
+        let currentMode = 'citizen';
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') ask();
+        }
+
+        function resetFilters() {
+            document.getElementById('query').value = '';
+            document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+        }
+
+        async function ask() {
+            const query = document.getElementById('query').value.trim().toLowerCase();
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('results').style.display = 'none';
+
+            let html = '';
+
+            if (query.includes('température') || query.includes('météo') || query.includes('temps')) {
+                const cities = ['Montréal', 'Toronto', 'Vancouver', 'Québec', 'Ottawa', 'Calgary'];
+                let list = '<ul>';
+                for (let city of cities) {
+                    try {
+                        const res = await fetch(`https://wttr.in/${city}?format=%t`);
+                        const temp = await res.text();
+                        list += `<li><strong>${city} :</strong> ${temp.trim()}</li>`;
+                    } catch {
+                        list += `<li><strong>${city} :</strong> indisponible</li>`;
+                    }
+                }
+                list += '</ul>';
+
+                html = `
+                    <h2>🧠 Météo actuelle au Canada</h2>
+                    <strong>Résumé :</strong> Températures en temps réel<br><br>
+                    <strong>Villes principales :</strong>${list}
+                    <strong>Source :</strong> wttr.in (données officielles)
+                `;
+            } else {
+                html = `
+                    <h2>🧠 "${query || 'Aucune question'}"</h2>
+                    <strong>Mode :</strong> ${currentMode === 'citizen' ? 'Citoyen' : currentMode === 'student' ? 'Étudiant' : 'Entreprise'}<br><br>
+                    <strong>En développement :</strong> Réponse complète bientôt disponible<br><br>
+                    <strong>Essayez :</strong> "température du jour" pour des données réelles immédiates
+                `;
+            }
+
+            document.getElementById('results').innerHTML = html;
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        // Thème
+        document.getElementById('theme-toggle').onclick = () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+        };
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            document.getElementById('theme-toggle').textContent = '☀️';
+        }
+    </script>
 </body>
 </html>
