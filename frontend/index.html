@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Canadia — Actualités</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #b30000;
+            color: white;
+            padding: 1rem;
+        }
+
+        main {
+            padding: 1rem;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .news-item {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #b30000;
+        }
+
+        .news-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading, .error {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+        }
+
+        /* Canadia Pro Dashboard Styles */
+        .dashboard {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-left: 4px solid #007bff;
+        }
+
+        .dashboard h2 {
+            margin-top: 0;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #f0f8ff;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 0.5rem;
+            flex: 1 1 calc(33.333% - 1rem);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* Canadia Pro Diagnostic Styles */
+        .diagnostic {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-left: 4px solid #28a745;
+        }
+
+        .diagnostic h2 {
+            margin-top: 0;
+        }
+
+        .diagnostic label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .diagnostic select, .diagnostic textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .diagnostic button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .diagnostic button:hover {
+            background: #218838;
+        }
+
+        /* Canadia Pro Analyse Stratégique Styles */
+        .ask-pro {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .ask-pro h2 {
+            margin-top: 0;
+        }
+
+        .ask-pro textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 100px;
+        }
+
+        .ask-pro button {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .ask-pro button:hover {
+            background: #138496;
+        }
+
+        /* Canadia Pro Résultat d'Analyse Stratégique Styles */
+        .pro-result {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-left: 4px solid #ffc107;
+        }
+
+        .pro-result h2 {
+            margin-top: 0;
+        }
+
+        .pro-result ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .pro-result li {
+            margin-bottom: 0.5rem;
+        }
+
+        .pro-answer {
+            background: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Canadia Pro Exemple de Réponse Structurée Styles */
+        .response {
+            background: #e9ecef;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-left: 4px solid #007bff;
+        }
+
+        .response h3 {
+            margin-top: 0;
+        }
+
+        .response ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .response li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Canadia Pro Plan d’Action Proposé Styles */
+        .action-plan {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-left: 4px solid #dc3545;
+        }
+
+        .action-plan h2 {
+            margin-top: 0;
+        }
+
+        .action-plan ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .action-plan li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Canadia Pro Historique Styles */
+        .history {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-left: 4px solid #6c757d;
+        }
+
+        .history h2 {
+            margin-top: 0;
+        }
+
+        .history ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .history li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Disclaimer Styles */
+        .disclaimer {
+            display: block;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Canadia</h1>
+    <p>Actualités citoyennes du jour</p>
+</header>
+
+<main>
+    <label for="province-select">Province :</label>
+    <select id="province-select">
+      <option value="QC">Québec</option>
+      <option value="ON">Ontario</option>
+      <option value="BC">Colombie-Britannique</option>
+    </select>
+    <div id="news-container" class="loading">
+        Chargement des actualités…
+    </div>
+
+    <!-- Canadia Pro Dashboard Section -->
+    <section class="dashboard">
+      <h2>Bienvenue sur Canadia Pro</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Structure actuelle</h3>
+          <p>Organisation fonctionnelle – 12 employés</p>
+        </div>
+        <div class="card">
+          <h3>Problèmes détectés</h3>
+          <p>Communication interne, priorités floues</p>
+        </div>
+        <div class="card">
+          <h3>Dernière analyse</h3>
+          <p>Il y a 3 jours</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Canadia Pro Diagnostic Section -->
+    <section class="diagnostic">
+      <h2>Diagnostic organisationnel</h2>
+      <label>
+        Quelle est la taille de votre entreprise ?
+        <select>
+          <option>1–5</option>
+          <option>6–20</option>
+          <option>21–100</option>
+          <option>100+</option>
+        </select>
+      </label>
+      <label>
+        Quels sont vos principaux défis actuels ?
+        <textarea></textarea>
+      </label>
+      <button>Continuer</button>
+    </section>
+
+    <!-- Canadia Pro Analyse Stratégique Section -->
+    <section class="ask-pro">
+      <h2>Analyse stratégique</h2>
+      <p><strong>Contexte entreprise :</strong> PME – services – Québec</p>
+      <textarea placeholder="Décrivez votre situation ou votre question..."></textarea>
+      <button>Analyser</button>
+    </section>
+
+    <!-- Canadia Pro Résultat d'Analyse Stratégique Section -->
+    <section class="pro-result">
+      <h2>Résultat de l’analyse</h2>
+      <ol>
+        <li><strong>Diagnostic</strong></li>
+        <li><strong>Hypothèses</strong></li>
+        <li><strong>Options possibles</strong></li>
+        <li><strong>Plan d’action</strong></li>
+        <li><strong>Points de vigilance</strong></li>
+      </ol>
+      <div class="pro-answer">
+        <!-- La réponse générée par l’IA s’affichera ici -->
+      </div>
+    </section>
+
+    <!-- Canadia Pro Exemple de Réponse Structurée Section -->
+    <section class="response">
+      <h3>Diagnostic</h3>
+      <p>La structure actuelle montre un chevauchement des responsabilités...</p>
+      <h3>Options possibles</h3>
+      <ul>
+        <li>Clarifier les rôles</li>
+        <li>Créer un point de coordination</li>
+      </ul>
+    </section>
+
+    <!-- Canadia Pro Plan d’Action Proposé Section -->
+    <section class="action-plan">
+      <h2>Plan d’action proposé</h2>
+      <ol>
+        <li>Clarifier les responsabilités clés</li>
+        <li>Mettre en place une réunion hebdomadaire</li>
+        <li>Documenter les processus critiques</li>
+      </ol>
+    </section>
+
+    <!-- Canadia Pro Historique des Analyses Section -->
+    <section class="history">
+      <h2>Historique</h2>
+      <ul>
+        <li>Analyse – Communication interne (12 mai)</li>
+        <li>Diagnostic – Structure (8 mai)</li>
+      </ul>
+    </section>
+
+    <!-- Disclaimer Canadia Pro -->
+    <small class="disclaimer">
+    Canadia Pro est un outil d’aide à la structuration et à la réflexion stratégique.
+    Il ne fournit aucun conseil financier, fiscal ou juridique.
+    </small>
+</main>
+
+<script src="main.js"></script>
+</body>
+</html>

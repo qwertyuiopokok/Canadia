@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des signaux</title>
+</head>
+<body>
+    <h1>Signaux centralisés</h1>
+    {% if signals %}
+    <ul>
+        {% for s in signals %}
+        <li>
+            <strong>{{ s.contexte }}</strong> ({{ s.date }})<br>
+            Valeur: {{ s.valeur }}<br>
+            Source: {{ s.source.nom if s.source }}<br>
+            Audience: {{ s.audience }}<br>
+            Géographie: {{ s.geographie.niveau if s.geographie }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Aucun signal enregistré.</p>
+    {% endif %}
+</body>
+</html>

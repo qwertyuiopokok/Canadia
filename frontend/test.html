@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Canadia</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  padding: 30px;
+}
+.box {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+select, textarea, button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+}
+.response {
+  margin-top: 20px;
+  background: #eef;
+  padding: 15px;
+  white-space: pre-wrap;
+}
+h3 { margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Canadia</h2>
+
+  <label>Mode</label>
+  <select id="mode">
+    <option value="citizen">Citoyen</option>
+    <option value="student">Étudiant</option>
+    <option value="pro">Professionnel</option>
+  </select>
+
+  <label>Niveau (Étudiant)</label>
+  <select id="level">
+    <option value="secondaire">Secondaire</option>
+    <option value="cegep">CÉGEP</option>
+    <option value="universite">Université</option>
+  </select>
+
+  <label>Domaine</label>
+  <input id="field" placeholder="ex: économie, génie, santé" />
+
+  <label>Question</label>
+  <textarea id="question" rows="4"></textarea>
+
+  <button onclick="ask()">Analyser</button>
+
+  <div id="response" class="response"></div>
+</div>
+
+<script>
+async function ask() {
+  const mode = document.getElementById("mode").value;
+  const payload = {
+    question: document.getElementById("question").value,
+    level: document.getElementById("level").value,
+    field: document.getElementById("field").value
+  };
+
+  const res = await fetch(`http://127.0.0.1:9000/${mode}/ask`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+
+  document.getElementById("response").textContent =
+    `🧠 ${data.title}\n\n` +
+    `Résumé:\n${data.summary}\n\n` +
+    `Points clés:\n- ${data.key_points.join("\n- ")}\n\n` +
+    (data.analysis ? `Analyse:\n${data.analysis}\n\n` : "") +
+    (data.actions_or_reflections ? `Pour aller plus loin:\n- ${data.actions_or_reflections.join("\n- ")}\n\n` : "") +
+    (data.sources ? `Sources:\n- ${data.sources.join("\n- ")}\n\n` : "") +
+    (data.limits ? `Limites:\n${data.limits}` : "");
+}
+</script>
+
+</body>
+</html>
+  <meta charset="UTF-8">
+  <title>Synthèse Canadia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 30px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    textarea, input {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #005fa3;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .response {
+      margin-top: 20px;
+      background: #eef;
+      padding: 15px;
+      white-space: pre-wrap;
+    }
+    .counter {
+      margin-top: 15px;
+      background: #fff3cd;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+    <header>
+        <h1>Synthèse Canadia</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Diagnostic / Explication</h2>
+            <div class="section-content" id="diagnostic"></div>
+        </section>
+        <section>
+            <h2>Éléments clés</h2>
+            <div class="section-content" id="elements-cles"></div>
+        </section>
+        <section>
+            <h2>Options / Interprétations</h2>
+            <div class="section-content" id="options"></div>
+        </section>
+        <section>
+            <h2>Points de vigilance</h2>
+            <div class="section-content" id="vigilance"></div>
+        </section>
+        <section>
+            <h2>Sources / Limites</h2>
+            <div class="section-content" id="sources"></div>
+        </section>
+    </main>
+
+
+
+
+
+
+<script>
+async function ask() {
+  document.getElementById("response").textContent = "Analyse en cours...";
+  document.getElementById("counter").textContent = "";
+
+  const payload = {
+    sector: document.getElementById("sector").value,
+    job: document.getElementById("job").value,
+    question: document.getElementById("question").value
+  };
+
+    const res = await fetch("http://127.0.0.1:9800/pro/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+
+  document.getElementById("response").textContent = data.answer || "Pas de réponse";
+
+  if (data.counter_questions && data.counter_questions.length > 0) {
+    document.getElementById("counter").innerHTML =
+      "<strong>Pour préciser :</strong><br>" +
+      data.counter_questions.join("<br>");
+  }
+}
+</script>
+
+</body>
+</html>
+</html>

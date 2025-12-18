@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Canadia — Actualités</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #b30000;
+            color: white;
+            padding: 1rem;
+        }
+        main {
+            padding: 1rem;
+            max-width: 900px;
+            margin: auto;
+        }
+        .news-item {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #b30000;
+        }
+        .news-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .loading, .error {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Canadia — Actualités</h1>
+    </header>
+    <main>
+        <div class="loading">Chargement des actualités...</div>
+        <div id="news-list"></div>
+    </main>
+    <script>
+        async function fetchNews() {
+            const loading = document.querySelector('.loading');
+            const newsList = document.getElementById('news-list');
+            try {
+                const response = await fetch('/suggestions');
+                if (!response.ok) throw new Error('Erreur lors du chargement');
+                const news = await response.json();
+                loading.style.display = 'none';
+                newsList.innerHTML = news.map(item => `
+                    <div class="news-item">
+                        <div class="news-meta">${item.title}</div>
+                        <a href="${item.link}" target="_blank">Lire l'article</a>
+                    </div>
+                `).join('');
+            } catch (e) {
+                loading.textContent = 'Erreur lors du chargement des actualités.';
+            }
+        }
+        fetchNews();
+    </script>
+</body>
+</html>
+            color: #e63946;
+        }
+        .footer {
+            margin-top: 4rem;
+            text-align: center;
+            color: #fff;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🇨🇦 Canadia</h1>
+        <div>Votre moteur citoyen d'accès à l'information publique</div>
+    </header>
+    <main>
+        <div class="search-container">
+            <form action="/ask" method="get">
+                <label for="question">Posez votre question :</label>
+                <input type="text" id="question" name="question" placeholder="Ex : Quels sont les programmes de logement au Canada ?" required autocomplete="off" list="suggestions-list">
+                <datalist id="suggestions-list"></datalist>
+                <div style="margin:1.2rem 0 0.5rem 0;">
+                    <span style="font-size:1.05rem;">Niveau de réponse souhaité :</span><br>
+                    <label style="margin-right:1.2rem;"><input type="radio" name="niveau" value="1" checked> 1&nbsp;: Complète (factuelle)</label>
+                    <label style="margin-right:1.2rem;"><input type="radio" name="niveau" value="2"> 2&nbsp;: Partielle (contextualisée)</label>
+                    <label style="margin-right:1.2rem;"><input type="radio" name="niveau" value="3"> 3&nbsp;: Explicative (cadre + limites)</label>
+                    <label style="margin-right:1.2rem;"><input type="radio" name="niveau" value="4"> 4&nbsp;: Orientation (où chercher)</label>
+                    <label><input type="radio" name="niveau" value="5"> 5&nbsp;: Transparence (ce qui manque)</label>
+                </div>
+                <button type="submit">Rechercher</button>
+                <script>
+                // Suggestions dynamiques d’actualités
+                const input = document.getElementById('question');
+                const datalist = document.getElementById('suggestions-list');
+                input.addEventListener('input', async function() {
+                    if (this.value.length < 2) return;
+                    try {
+                        const resp = await fetch('/suggestions');
+                        if (!resp.ok) return;
+                        const data = await resp.json();
+                        datalist.innerHTML = '';
+                        data.forEach(s => {
+                            const opt = document.createElement('option');
+                            opt.value = s.title;
+                            datalist.appendChild(opt);
+                        });
+                    } catch (e) {}
+                });
+                </script>
+            </form>
+        </div>
+        <div id="actus-container" style="margin:2.5rem auto 0 auto;max-width:700px;background:rgba(255,255,255,0.10);border-radius:16px;padding:1.5rem 2rem;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+            <h2 style="color:#fff;font-size:1.5rem;margin-top:0;">Actualités du jour</h2>
+            <div id="actus-list">
+                <div style="color:#fff;opacity:0.7;">Chargement des actualités...</div>
+            </div>
+        </div>
+        <script>
+        // Affichage des actualités du jour
+        async function chargerActus() {
+            const cont = document.getElementById('actus-list');
+            try {
+                const resp = await fetch('/suggestions');
+                if (!resp.ok) throw new Error();
+                const data = await resp.json();
+                if (!data.length) {
+                    cont.innerHTML = '<div style="color:#fff;opacity:0.7;">Aucune actualité trouvée.</div>';
+                    return;
+                }
+                cont.innerHTML = '';
+                data.slice(0, 7).forEach(a => {
+                    const d = document.createElement('div');
+                    d.style.marginBottom = '1.2rem';
+                    d.innerHTML = `<a href="${a.link}" target="_blank" style="color:#a8dadc;font-weight:bold;font-size:1.1rem;text-decoration:none;">${a.title}</a>`;
+                    cont.appendChild(d);
+                });
+            } catch (e) {
+                cont.innerHTML = '<div style="color:#fff;opacity:0.7;">Impossible de charger les actualités.</div>';
+            }
+        }
+        chargerActus();
+        </script>
+    </main>
+    <div class="footer">
+        &copy; 2025 Canadia. Rouge, blanc et bleu pour tous.
+    </div>
+</body>
+</html>

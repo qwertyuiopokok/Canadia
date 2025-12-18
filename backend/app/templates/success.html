@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Réponse API - Succès</title>
+    <style>
+        body {
+            background: linear-gradient(90deg, #e63946 0%, #457b9d 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 3rem auto;
+            background: rgba(255,255,255,0.10);
+            border-radius: 16px;
+            padding: 2rem 2rem 1.5rem 2rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .data-block {
+            background: #fff;
+            color: #222;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1rem;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        a.button {
+            display: inline-block;
+            margin: 2rem auto 0 auto;
+            background: #e63946;
+            color: #fff;
+            padding: 0.7rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        a.button:hover {
+            background: #457b9d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Succès</h1>
+        <div class="message">{{ message | safe }}</div>
+        {% if data %}
+        <div class="data-block">
+            {% if data is string %}
+                <p>{{ data }}</p>
+            {% elif data is mapping %}
+                <ul style="list-style:none; padding:0;">
+                {% for key, value in data.items() %}
+                    <li><strong>{{ key|capitalize }} :</strong> {{ value }}</li>
+                {% endfor %}
+                </ul>
+            {% elif data is sequence %}
+                <ul>
+                {% for item in data %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>{{ data }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        <div style="text-align:center;">
+            <a href="/" class="button">Retour à l'accueil</a>
+        </div>
+    </div>
+</body>
+</html>
