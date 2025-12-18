@@ -223,14 +223,31 @@
             </header>
 
             <main>
-                <div class="search-container">
-                    <input type="text" class="search-box" id="query" placeholder="Posez votre question ici..." onkeypress="handleEnter(event)" />
-                    <p class="hint" id="mode-hint">Recherche générale pour tous les citoyens</p>
-                    <button class="search-btn" onclick="ask()">Rechercher</button>
+                <div class="search-ui-bg">
+                    <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
+                        <div class="search-bar">
+                            <input type="text" id="query" class="search-bar-input" placeholder="Type Keywords" onkeypress="handleEnter(event)" />
+                            <button type="submit" class="search-bar-btn" aria-label="Rechercher"><span class="search-icon">🔍</span></button>
+                        </div>
+                        <div class="advanced-search">
+                            <span class="advanced-title">ADVANCED SEARCH</span>
+                            <div class="advanced-filters">
+                                <select id="filter1"><option>Accessories</option></select>
+                                <select id="filter2"><option>Color</option></select>
+                                <select id="filter3"><option>Size</option></select>
+                                <select id="filter4"><option>Sale</option></select>
+                                <select id="filter5"><option>Time</option></select>
+                                <select id="filter6"><option>Type</option></select>
+                            </div>
+                            <div class="advanced-actions">
+                                <span id="results-count">108 results</span>
+                                <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
+                                <button type="submit" class="search-btn-gradient">SEARCH</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
                 <div id="loader">Canadia réfléchit... ⏳</div>
-
                 <div id="results"></div>
             </main>
 
