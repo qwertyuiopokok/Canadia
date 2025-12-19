@@ -1,7 +1,36 @@
+import os
+import logging
+def check_faiss_llm():
+    try:
+        from backend.app.rag import engine
+        base_dir = os.path.dirname(os.path.abspath(engine.__file__))
+        faiss_index_path = os.path.join(base_dir, "quebec_faiss.index")
+        if not os.path.exists(faiss_index_path):
+            logging.warning(f"[Canadia] Index FAISS absent: {faiss_index_path}")
+        from langchain_community.llms import Ollama
+        _ = Ollama(model="tinyllama")
+    except Exception as e:
+        logging.warning(f"[Canadia] Problème LLM/FAISS: {e}")
+
+check_faiss_llm()
+# --- Load environment variables from .env ---
+from dotenv import load_dotenv
+load_dotenv()
+
 # --- Database initialization ---
-from app.storage.database import init_db
+from .storage.database import init_db
 from fastapi import FastAPI, Response
 app = FastAPI()
+
+# --- Middleware CORS ---
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Ensure DB tables exist at startup
 @app.on_event("startup")
@@ -163,7 +192,7 @@ def start_scheduler_background(interval_minutes=30):
 start_scheduler_background(interval_minutes=30)
 
 # Jinja2 templates setup
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="backend/app/templates")
 
 
 
@@ -178,6 +207,23 @@ app.include_router(student_router, prefix="/student")
 from app.api.feedback import router as feedback_router
 app.include_router(feedback_router)
 
+# --- Ajout du routeur ask_web ---
+from app.api.ask_web import router as ask_web_router
+app.include_router(ask_web_router)
+
+
+# --- Ajout du routeur status ---
+from app.api.status import router as status_router
+app.include_router(status_router)
+
+from app.api.ask_anything import router as ask_anything_router
+app.include_router(ask_anything_router)
+
+from app.api.ask_anything_pro import router as ask_anything_pro_router
+app.include_router(ask_anything_pro_router)
+
+from app.api.ask_rag import router as ask_rag_router
+app.include_router(ask_rag_router)
 
 
 @app.post("/document")

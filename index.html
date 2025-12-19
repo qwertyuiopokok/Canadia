@@ -1,3 +1,88 @@
-git add docs/index.html
-git commit -m "Nouvelle interface recherche avancée comme l'image"
-git push origin main
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme Canadia - Aperçu en Temps Réel avec Gestion d'Erreurs</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 1em; }
+        #status-indicator { font-weight: bold; }
+        #ask-result { margin-top: 1em; color: #333; }
+        .error { color: red; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Travail sur Canadia</h1>
+    
+    <!-- Section pour le statut en temps réel -->
+    <div style="margin:1em 0; font-weight:bold;">
+        Statut de la plateforme : <span id="status-indicator">Chargement...</span>
+    </div>
+    
+    <!-- Section pour poser une question -->
+    <div style="margin:1em 0;">
+        <label for="ask-input">Posez votre question (ex: Qu'est-ce que le Canada?) :</label>
+        <input type="text" id="ask-input" style="width:300px;" placeholder="Ex: Qu'est-ce que le Canada?">
+        <button onclick="askWeb()">Demander</button>
+    </div>
+    
+    <div id="ask-result" style="margin:1em 0; color: #333;"></div>
+    
+    <script>
+        const API_BASE = "http://127.0.0.1:8000";
+        // Fonction asynchrone pour vérifier le statut (simule un appel à une API)
+        async function checkStatus() {
+            try {
+                const response = await fetch(API_BASE + '/status');
+                const data = await response.json();
+                document.getElementById('status-indicator').textContent = data.status + ' (' + data.date + ')';
+                document.getElementById('status-indicator').style.color = 'green';
+            } catch (e) {
+                document.getElementById('status-indicator').textContent = 'Indisponible - Vérifiez votre serveur';
+                document.getElementById('status-indicator').style.color = 'red';
+                console.error('Erreur de connexion:', e);
+            }
+        }
+        
+        // Appelle la fonction au chargement de la page et toutes les 10 secondes
+        window.onload = () => {
+            checkStatus();
+            setInterval(checkStatus, 10000); // toutes les 10 secondes
+        };
+        
+        // Fonction asynchrone pour poser une question avec meilleure gestion d'erreurs
+        async function askWeb() {
+            const question = document.getElementById('ask-input').value;
+            const resultDiv = document.getElementById('ask-result');
+            const button = document.querySelector('button');
+            button.disabled = true;
+            resultDiv.textContent = 'Recherche en cours...';
+            try {
+                const statusResponse = await fetch(API_BASE + '/status');
+                if (!statusResponse.ok) {
+                    throw new Error('Serveur inaccessible. Vérifiez s\'il est en cours d\'exécution.');
+                }
+                const response = await fetch(API_BASE + '/ask_web?question=' + encodeURIComponent(question));
+                if (!response.ok) {
+                    throw new Error(`Erreur serveur (${response.status})`);
+                }
+                const data = await response.json();
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erreur : ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <b>Source :</b> ${data.source}<br>
+                        <b>Titre :</b> ${data.title}<br>
+                        <b>Extrait :</b> ${data.snippet}
+                    `;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erreur de connexion : ${e.message}. Vérifiez votre serveur local, le port, ou votre connexion réseau. Essayez de redémarrer le serveur.</span>`;
+                console.error('Erreur dans askWeb:', e);
+            } finally {
+                button.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
