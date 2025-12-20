@@ -1,85 +1,164 @@
-import os
-import logging
-def check_faiss_llm():
-    try:
-        from backend.app.rag import engine
-        base_dir = os.path.dirname(os.path.abspath(engine.__file__))
-        faiss_index_path = os.path.join(base_dir, "quebec_faiss.index")
-        if not os.path.exists(faiss_index_path):
-            logging.warning(f"[Canadia] Index FAISS absent: {faiss_index_path}")
-        from langchain_community.llms import Ollama
-        _ = Ollama(model="tinyllama")
-    except Exception as e:
-        logging.warning(f"[Canadia] Problème LLM/FAISS: {e}")
+from fastapi import Body
 
-check_faiss_llm()
-# --- Load environment variables from .env ---
-from dotenv import load_dotenv
-load_dotenv()
 
-# --- Database initialization ---
-from .storage.database import init_db
-from fastapi import FastAPI, Response
-app = FastAPI()
-
-# --- Middleware CORS ---
+# --- IMPORTS ---
+from fastapi import FastAPI, Request, Response, status, Body
+from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, JSONResponse
+from pydantic import BaseModel, constr as pyd_constr, Field
+from typing import Any, List, Optional, Union, Literal
+from enum import Enum
+from uuid import UUID
+import threading
+import time
+import requests
+
+import logging
+import psutil
+import yagmail
+
+# --- SURVEILLANCE MEMOIRE EN TACHE DE FOND ---
+MEMORY_ALERT_THRESHOLD = 80.0  # pourcentage
+MEMORY_CHECK_INTERVAL = 10  # secondes
+
+# --- CONFIG EMAIL ---
+MEMORY_ALERT_EMAIL = "fourniermorinetienne@gmail.com"  # Adresse d'alerte
+YAGMAIL_USER = "fourniermorinetienne@gmail.com"        # Identifiant d'envoi
+YAGMAIL_PASS = "VOTRE_MOT_DE_PASSE"             # À personnaliser
+
+def memory_monitor_loop():
+    process = psutil.Process()
+    while True:
+        mem_percent = process.memory_percent()
+        if mem_percent > MEMORY_ALERT_THRESHOLD:
+            logging.warning(f"ALERTE MEMOIRE: Utilisation mémoire élevée: {mem_percent:.2f}%")
+            try:
+                yag = yagmail.SMTP(YAGMAIL_USER, YAGMAIL_PASS)
+                yag.send(
+                    to=MEMORY_ALERT_EMAIL,
+                    subject="Alerte mémoire Canadia",
+                    contents=f"Utilisation mémoire élevée détectée: {mem_percent:.2f}% sur le backend."
+                )
+            except Exception as e:
+                logging.error(f"Erreur lors de l'envoi de l'alerte email: {e}")
+        time.sleep(MEMORY_CHECK_INTERVAL)
+
+# Lancer la surveillance mémoire en tâche de fond au démarrage
+threading.Thread(target=memory_monitor_loop, daemon=True).start()
+
+# Pour la surveillance mémoire
+
+# --- APP & MIDDLEWARE ---
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*", "http://localhost", "http://127.0.0.1"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response: Response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload"
+    response.headers["Referrer-Policy"] = "same-origin"
+    response.headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none';"
+    return response
 
-# Ensure DB tables exist at startup
-@app.on_event("startup")
-def startup_event():
-    init_db()
-# --- Daily job scheduler for gap analysis ---
-from app.scheduler.daily_jobs import run_daily_jobs
-import threading
-import time
-from app.pipeline import run_ingestion
-from app.storage.content_store import all_contents
-from datetime import datetime
+# --- MODELES ---
+class AskReq(BaseModel):
+    question: pyd_constr(strip_whitespace=True, min_length=1, max_length=500)
 
-# Ajout de l'endpoint après la création de l'objet app
-@app.post("/admin/ingest")
-def ingest_now():
-    """
-    Lance manuellement le pipeline d’actualités.
-    À protéger plus tard (clé admin).
-    """
-    results = run_ingestion()
+# (Autres modèles Pydantic ici, voir plus bas)
+
+# --- ROUTES PRINCIPALES ---
+@app.post("/ask", status_code=status.HTTP_200_OK)
+def ask(req: AskReq):
+    return {"message": f"Question reçue: {req.question}"}
+
+@app.post("/citizen/ask", status_code=status.HTTP_200_OK)
+def citizen_ask(req: AskReq = Body(...)):
+    return ask(req)
+
+# --- ROUTES HTML ---
+templates = Jinja2Templates(directory="backend/app/templates")
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+@app.get("/charte", response_class=HTMLResponse)
+def charte(request: Request):
+    return templates.TemplateResponse("charte.html", {"request": request})
+@app.get("/signals/html", response_class=HTMLResponse)
+def signals_html(request: Request):
+    return templates.TemplateResponse("signals.html", {"request": request, "signals": []})
+@app.get("/success", response_class=HTMLResponse)
+def success_example(request: Request):
+    return templates.TemplateResponse("success.html", {"request": request, "message": "Opération réussie !", "data": {"foo": "bar"}})
+@app.get("/error", response_class=HTMLResponse)
+def error_example(request: Request):
+    return templates.TemplateResponse("error.html", {"request": request, "message": "Une erreur est survenue.", "details": "Détail technique ici."})
+
+# --- INCLUSION DES ROUTEURS ---
+from backend.app.api.ask import router as ask_router
+from backend.app.api.content import router as content_router
+from backend.app.api.alerts import router as alerts_router
+from backend.app.api.pro import router as pro_router
+from backend.app.api.student import router as student_router
+from backend.app.api.feedback import router as feedback_router
+from backend.app.api.ask_web import router as ask_web_router
+from backend.app.api.status import router as status_router
+from backend.app.api.ask_anything import router as ask_anything_router
+from backend.app.api.ask_anything_pro import router as ask_anything_pro_router
+
+# --- ROUTE DE SURVEILLANCE MEMOIRE ---
+@app.get("/monitor/memory", response_class=JSONResponse)
+def monitor_memory():
+    process = psutil.Process()
+    mem_info = process.memory_info()
     return {
-        "status": "ok",
-        "items_processed": len(results)
+        "rss": mem_info.rss,  # Resident Set Size
+        "vms": mem_info.vms,  # Virtual Memory Size
+        "percent": process.memory_percent(),
     }
 
-@app.get("/suggestions")
-def suggestions():
-    # Récupère les contenus du jour (ou les plus récents)
-    contents = all_contents()
-    # Tri par date décroissante, puis sélection des 10 plus récents
-    items = sorted(
-        [c for c in contents if c.get("status") == "new" or c.get("status") == "updated"],
-        key=lambda x: x.get("last_updated", ""),
-        reverse=True
-    )[:10]
-    # Format minimal pour l’UI
-    return [
-        {
-            "title": c["title"],
-            "link": c.get("url", "#")
-        } for c in items
-    ]
+
+app.include_router(ask_router)
+app.include_router(content_router)
+app.include_router(alerts_router)
+app.include_router(pro_router)
+app.include_router(student_router, prefix="/student")
+app.include_router(feedback_router)
+app.include_router(ask_web_router)
+app.include_router(status_router)
+app.include_router(ask_anything_router)
+app.include_router(ask_anything_pro_router)
+# app.include_router(ask_rag_router)
+
+# --- AUTRES MODELES (à placer dans un fichier models.py idéalement) ---
+# (Province, Region, Geographie, Document, etc.)
+
+
+# SCHEDULER désactivé pour stabilité (threading et scheduler_loop retirés)
+
+# Jinja2 templates setup
+templates = Jinja2Templates(directory="backend/app/templates")
+
 # --- Import du routeur ask pour suggestions ---
-from app.api.ask import router as ask_router
-from app.api.content import router as content_router
-from app.api.alerts import router as alerts_router
-from app.api.pro import router as pro_router
-from app.api.student import router as student_router
+from backend.app.api.ask import router as ask_router
+from backend.app.api.content import router as content_router
+from backend.app.api.alerts import router as alerts_router
+from backend.app.api.pro import router as pro_router
+from backend.app.api.student import router as student_router
+
+app.include_router(ask_router)
+app.include_router(content_router)
+app.include_router(alerts_router)
+app.include_router(pro_router)
+app.include_router(student_router, prefix="/student")
 # --- Modèles avancés pour filtrage, pagination, tri ---
 from typing import Any, List, Optional
 from enum import Enum
@@ -176,8 +255,9 @@ class Document(BaseModel):
 
 
 
+
 import threading
-from app.pipeline import run_ingestion
+from backend.app.pipeline import run_ingestion
 
 def start_scheduler_background(interval_minutes=30):
     def scheduler_loop():
@@ -204,25 +284,25 @@ app.include_router(content_router)
 app.include_router(alerts_router)
 app.include_router(pro_router)
 app.include_router(student_router, prefix="/student")
-from app.api.feedback import router as feedback_router
+from backend.app.api.feedback import router as feedback_router
 app.include_router(feedback_router)
 
 # --- Ajout du routeur ask_web ---
-from app.api.ask_web import router as ask_web_router
+from backend.app.api.ask_web import router as ask_web_router
 app.include_router(ask_web_router)
 
 
 # --- Ajout du routeur status ---
-from app.api.status import router as status_router
+from backend.app.api.status import router as status_router
 app.include_router(status_router)
 
-from app.api.ask_anything import router as ask_anything_router
+from backend.app.api.ask_anything import router as ask_anything_router
 app.include_router(ask_anything_router)
 
-from app.api.ask_anything_pro import router as ask_anything_pro_router
+from backend.app.api.ask_anything_pro import router as ask_anything_pro_router
 app.include_router(ask_anything_pro_router)
 
-from app.api.ask_rag import router as ask_rag_router
+from backend.app.api.ask_rag import router as ask_rag_router
 app.include_router(ask_rag_router)
 
 
