@@ -1,4 +1,4 @@
-#!/Users/etiennefournier-morin/Desktop/citoyen-qc/backend/.venv/bin/python3
+#!/home/runner/work/Canadia/Canadia/backend/.venv/bin/python3
 import sys
 from fastapi.cli import main
 if __name__ == '__main__':
