@@ -7,7 +7,32 @@ This guide will help you set up the Canadia development environment on your loca
 - Python 3.9 or higher
 - macOS, Linux, or Windows
 
-## Setup Steps
+## Automated Setup (Recommended)
+
+**The fastest way to get started:**
+
+```bash
+# 1. Run the automated setup script
+bash setup.sh
+
+# 2. Start the server
+./start_canadia.sh
+```
+
+The setup script will:
+- Check Python installation
+- Create virtual environment
+- Install all dependencies
+- Create .env file
+- Provide clear error messages if anything goes wrong
+
+Then access: http://localhost:9800/docs
+
+---
+
+## Manual Setup Steps
+
+If you prefer to set up manually:
 
 ### 1. Clone the Repository (if not already done)
 

@@ -2,6 +2,22 @@
 
 A FastAPI-based backend platform with RAG (Retrieval-Augmented Generation) capabilities for processing news and providing intelligent responses.
 
+## Quick Start
+
+**The easiest way to get started:**
+
+```bash
+# 1. Run the setup script (recommended)
+bash setup.sh
+
+# 2. Start the server
+./start_canadia.sh
+```
+
+Then access the API at http://localhost:9800/docs
+
+---
+
 ## Project Structure
 
 ```
@@ -78,10 +94,17 @@ Create a `.env` file in the root directory with your configuration:
 
 ### 6. Run the Application
 
+**⚠️ IMPORTANT: Make sure you completed steps 1-4 above before running the server!**
+
 **Option A: Using the startup script (recommended)**
 ```bash
 ./start_canadia.sh
 ```
+
+**The script will check if:**
+- Virtual environment exists (`.venv/`)
+- Dependencies are installed
+- And provide helpful error messages if something is missing
 
 **Option B: Manual startup**
 ```bash
