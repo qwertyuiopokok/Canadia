@@ -82,12 +82,69 @@
             background: var(--surface);
             border-radius: 12px;
             padding: 1.5rem 1.2rem;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+        }
+        .advanced-search.show {
+            max-height: 500px;
+            opacity: 1;
+            padding: 1.5rem 1.2rem;
         }
         .advanced-title {
             font-size: 1rem;
             font-weight: 600;
             color: var(--muted);
             margin-bottom: 1.2rem;
+        }
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--blue);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+        .advanced-toggle:hover {
+            color: var(--primary);
+        }
+        .welcome-hints {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+        .welcome-hints strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .example-queries {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.75rem;
+        }
+        .example-query {
+            background: var(--gradient);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .example-query:hover {
+            transform: translateY(-2px);
         }
         .advanced-filters {
             display: grid;
@@ -152,7 +209,22 @@
                 <input type="text" id="query" class="search-bar-input" placeholder="Posez votre question ici..." onkeypress="handleEnter(event)" />
                 <button type="submit" class="search-bar-btn">🔍</button>
             </div>
-            <div class="advanced-search">
+            
+            <div class="welcome-hints">
+                <strong>💡 Exemples de questions :</strong>
+                <div class="example-queries">
+                    <span class="example-query" onclick="tryExample('température du jour')">Météo du jour</span>
+                    <span class="example-query" onclick="tryExample('Qu\'est-ce que le Canada?')">Culture canadienne</span>
+                    <span class="example-query" onclick="tryExample('actualités Canada')">Actualités</span>
+                </div>
+            </div>
+            
+            <button type="button" class="advanced-toggle" onclick="toggleAdvanced()">
+                <span id="toggle-text">Afficher les filtres avancés</span>
+                <span id="toggle-icon">▼</span>
+            </button>
+            
+            <div class="advanced-search" id="advanced-search">
                 <span class="advanced-title">RECHERCHE AVANCÉE</span>
                 <div class="advanced-filters">
                     <select><option>Catégorie</option></select>
@@ -185,6 +257,27 @@
 
         function handleEnter(e) {
             if (e.key === 'Enter') ask();
+        }
+
+        function toggleAdvanced() {
+            const advancedSection = document.getElementById('advanced-search');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+            
+            if (advancedSection.classList.contains('show')) {
+                advancedSection.classList.remove('show');
+                toggleText.textContent = 'Afficher les filtres avancés';
+                toggleIcon.textContent = '▼';
+            } else {
+                advancedSection.classList.add('show');
+                toggleText.textContent = 'Masquer les filtres avancés';
+                toggleIcon.textContent = '▲';
+            }
+        }
+
+        function tryExample(query) {
+            document.getElementById('query').value = query;
+            document.getElementById('query').focus();
         }
 
         function resetFilters() {
