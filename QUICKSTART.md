@@ -26,7 +26,7 @@ The setup script will:
 - Create .env file
 - Provide clear error messages if anything goes wrong
 
-Then access: http://localhost:9800/docs
+Then access: http://localhost:8080/docs
 
 ---
 
@@ -101,14 +101,14 @@ Copy the example `.env` file (if exists) or create one:
 ```bash
 source .venv/bin/activate
 cd backend
-uvicorn app.main:app --reload --host 0.0.0.0 --port 9800
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
 ```
 
 ### 8. Access the Application
 
-- API: http://localhost:9800 (or http://[your-server-ip]:9800 for remote access)
-- API Documentation (Swagger UI): http://localhost:9800/docs
-- Alternative Documentation (ReDoc): http://localhost:9800/redoc
+- API: http://localhost:8080 (or http://[your-server-ip]:8080 for remote access)
+- API Documentation (Swagger UI): http://localhost:8080/docs
+- Alternative Documentation (ReDoc): http://localhost:8080/redoc
 
 ## Verification
 
@@ -140,10 +140,10 @@ source .venv/bin/activate  # macOS/Linux
 **Solution:** Kill the process using the port:
 ```bash
 # macOS/Linux
-lsof -ti tcp:9800 | xargs kill -9
+lsof -ti tcp:8080 | xargs kill -9
 
 # Windows
-netstat -ano | findstr :9800
+netstat -ano | findstr :8080
 taskkill /PID <PID> /F
 ```
 
@@ -166,9 +166,9 @@ uvicorn app.main:app --reload
    ```
 2. **Use correct host binding:** Server must use `0.0.0.0` to accept external connections (already configured in `start_canadia.sh`)
 3. **Access from correct URL:**
-   - Local: http://localhost:9800
-   - Remote: http://[server-ip]:9800
-4. **Check firewall settings:** Ensure port 9800 is not blocked
+   - Local: http://localhost:8080
+   - Remote: http://[server-ip]:8080
+4. **Check firewall settings:** Ensure port 8080 is not blocked
 
 ### Issue: ModuleNotFoundError
 
@@ -182,7 +182,7 @@ pip install -r requirements.txt
 1. **Activate environment:** `source .venv/bin/activate`
 2. **Make changes** to code
 3. **Test locally:** Server auto-reloads with `--reload` flag
-4. **Check API docs:** Visit http://localhost:9800/docs
+4. **Check API docs:** Visit http://localhost:8080/docs
 5. **Commit changes:** Use git as normal
 
 ## Deactivating the Virtual Environment
@@ -196,7 +196,7 @@ deactivate
 ## Next Steps
 
 - Read the full [README.md](README.md) for architecture details
-- Explore the API at http://localhost:9800/docs
+- Explore the API at http://localhost:8080/docs
 - Check the `backend/app/` directory for code structure
 - Review endpoints in `backend/app/api/`
 
