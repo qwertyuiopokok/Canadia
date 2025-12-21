@@ -65,7 +65,31 @@ If you need to recreate the environment:
 - **API Routes**: Modular routers in `backend/app/api/`
 - **Core Logic**: Business logic in `backend/app/core/`
 
+## Troubleshooting
+
+### "ModuleNotFoundError: No module named 'app'" or "No module named 'requests'"
+
+This error occurs when the virtual environment is missing or corrupted. To fix:
+
+```bash
+cd backend
+rm -rf .venv
+python3 -m venv .venv
+.venv/bin/pip install --upgrade pip
+.venv/bin/pip install -r requirements.txt
+cd ..
+./start_canadia.sh
+```
+
+### Virtual Environment Issues
+
+The virtual environment must be properly set up before starting the server. If you encounter import errors:
+- Ensure you're in the repository root when running `./start_canadia.sh`
+- The script automatically sets `PYTHONPATH` to resolve import conflicts
+- Dependencies are installed in `backend/.venv`, not in the root directory
+
 ## Notes
 
 - The virtual environment is stored in `backend/.venv` and is excluded from git
 - The server uses port 9800 by default (configurable in `start_canadia.sh`)
+- Import paths use both `app.*` and `backend.app.*` patterns - PYTHONPATH handles this automatically
