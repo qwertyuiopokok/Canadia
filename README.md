@@ -85,15 +85,15 @@ Create a `.env` file in the root directory with your configuration:
 
 **Option B: Manual startup**
 ```bash
+source .venv/bin/activate
 cd backend
-source ../.venv/bin/activate
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload --host 127.0.0.1 --port 9800
 ```
 
 The API will be available at:
-- Main API: http://127.0.0.1:8000
-- Swagger UI docs: http://127.0.0.1:8000/docs
-- ReDoc: http://127.0.0.1:8000/redoc
+- Main API: http://127.0.0.1:9800
+- Swagger UI docs: http://127.0.0.1:9800/docs
+- ReDoc: http://127.0.0.1:9800/redoc
 
 ## Development
 
@@ -109,9 +109,9 @@ which .venv/bin/uvicorn
 
 For development with auto-reload:
 ```bash
+source .venv/bin/activate
 cd backend
-source ../.venv/bin/activate
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload --host 127.0.0.1 --port 9800
 ```
 
 ### Project Architecture
@@ -146,17 +146,18 @@ source .venv/bin/activate  # macOS/Linux
 
 ### Import errors
 
-Ensure you're running uvicorn from the `backend` directory:
+Ensure you're in the virtual environment and running from the `backend` directory:
 ```bash
+source .venv/bin/activate  # From root directory
 cd backend
 uvicorn app.main:app --reload
 ```
 
 ### Port already in use
 
-Kill the process using the port (default 8000 or 9800):
+Kill the process using the port (default 9800):
 ```bash
-lsof -ti tcp:8000 | xargs kill -9  # macOS/Linux
+lsof -ti tcp:9800 | xargs kill -9  # macOS/Linux
 ```
 
 ## License

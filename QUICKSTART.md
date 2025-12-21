@@ -74,16 +74,16 @@ Copy the example `.env` file (if exists) or create one:
 
 **Or manually:**
 ```bash
+source .venv/bin/activate
 cd backend
-source ../.venv/bin/activate
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload --host 127.0.0.1 --port 9800
 ```
 
 ### 8. Access the Application
 
-- API: http://127.0.0.1:8000
-- API Documentation (Swagger UI): http://127.0.0.1:8000/docs
-- Alternative Documentation (ReDoc): http://127.0.0.1:8000/redoc
+- API: http://127.0.0.1:9800
+- API Documentation (Swagger UI): http://127.0.0.1:9800/docs
+- Alternative Documentation (ReDoc): http://127.0.0.1:9800/redoc
 
 ## Verification
 
@@ -115,17 +115,18 @@ source .venv/bin/activate  # macOS/Linux
 **Solution:** Kill the process using the port:
 ```bash
 # macOS/Linux
-lsof -ti tcp:8000 | xargs kill -9
+lsof -ti tcp:9800 | xargs kill -9
 
 # Windows
-netstat -ano | findstr :8000
+netstat -ano | findstr :9800
 taskkill /PID <PID> /F
 ```
 
 ### Issue: Import errors when running uvicorn
 
-**Solution:** Make sure you're running from the `backend` directory:
+**Solution:** Make sure you're in the virtual environment and running from the `backend` directory:
 ```bash
+source .venv/bin/activate  # From root directory
 cd backend
 uvicorn app.main:app --reload
 ```
@@ -135,7 +136,7 @@ uvicorn app.main:app --reload
 1. **Activate environment:** `source .venv/bin/activate`
 2. **Make changes** to code
 3. **Test locally:** Server auto-reloads with `--reload` flag
-4. **Check API docs:** Visit http://127.0.0.1:8000/docs
+4. **Check API docs:** Visit http://127.0.0.1:9800/docs
 5. **Commit changes:** Use git as normal
 
 ## Deactivating the Virtual Environment
@@ -149,7 +150,7 @@ deactivate
 ## Next Steps
 
 - Read the full [README.md](README.md) for architecture details
-- Explore the API at http://127.0.0.1:8000/docs
+- Explore the API at http://127.0.0.1:9800/docs
 - Check the `backend/app/` directory for code structure
 - Review endpoints in `backend/app/api/`
 
