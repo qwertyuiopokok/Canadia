@@ -1,10 +1,10 @@
 #!/bin/bash
 
-PORT=9800
+PORT=9900
 
 echo "🔎 Nettoyage du port $PORT..."
 lsof -ti tcp:$PORT | xargs kill -9 2>/dev/null
 
 echo "🚀 Lancement de Canadia sur le port $PORT..."
-source .venv/bin/activate
+cd backend
 python3 -m uvicorn app.main:app --host 127.0.0.1 --port $PORT
