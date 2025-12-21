@@ -362,7 +362,6 @@ def run_server(port=9800, open_browser=True):
     if open_browser:
         # Open browser after a short delay
         def open_browser_delayed():
-            import time
             time.sleep(1)
             print(f"🌐 Opening browser at {url}...")
             webbrowser.open(url)

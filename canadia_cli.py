@@ -35,7 +35,8 @@ def start_canadia():
         if result.stdout.strip():
             pids = result.stdout.strip().split('\n')
             for pid in pids:
-                if pid:
+                # Validate PID is numeric before using
+                if pid and pid.isdigit():
                     subprocess.run(['kill', '-9', pid], check=False)
     except FileNotFoundError:
         # lsof command not found, skip port cleanup
@@ -48,11 +49,10 @@ def start_canadia():
     # Try to use the demo server for simplicity and reliability
     if demo_server.exists():
         print("📱 Using Canadia demo server...")
-        cmd = f"cd {repo_root} && python3 {demo_server}"
+        # Use list arguments instead of shell command for security
         process = subprocess.Popen(
-            cmd,
-            shell=True,
-            executable="/bin/bash",
+            ['python3', str(demo_server)],
+            cwd=str(repo_root),
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True
