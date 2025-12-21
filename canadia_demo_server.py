@@ -347,7 +347,9 @@ class CanadiaHandler(BaseHTTPRequestHandler):
 
 def run_server(port=9800, open_browser=True):
     """Run the demo server"""
-    server_address = ('127.0.0.1', port)
+    # Bind to 0.0.0.0 to allow connections from any network interface
+    # This is required for remote environments like GitHub Codespaces
+    server_address = ('0.0.0.0', port)
     httpd = HTTPServer(server_address, CanadiaHandler)
     
     url = f"http://127.0.0.1:{port}"
@@ -355,6 +357,7 @@ def run_server(port=9800, open_browser=True):
     print(f"🇨🇦 Canadia Demo Server Started!")
     print(f"{'='*60}")
     print(f"URL: {url}")
+    print(f"Additional: Server is accessible on all network interfaces (0.0.0.0:{port})")
     print(f"\nServer is running on port {port}")
     print(f"Press Ctrl+C to stop the server")
     print(f"{'='*60}\n")
