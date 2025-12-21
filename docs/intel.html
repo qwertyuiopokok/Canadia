@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canadia — Test en cours</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #d32f2f;
+            margin-bottom: 0.5rem;
+        }
+        p.subtitle {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 3rem;
+        }
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            padding: 1.2rem 1.5rem;
+            font-size: 1.4rem;
+            border: 3px solid #d32f2f;
+            border-radius: 50px;
+            outline: none;
+            box-shadow: 0 4px 15px rgba(211,47,47,0.2);
+        }
+        .search-box:focus {
+            border-color: #f44336;
+            box-shadow: 0 6px 20px rgba(244,67,54,0.3);
+        }
+        button {
+            margin-top: 2rem;
+            padding: 1rem 3rem;
+            font-size: 1.3rem;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(211,47,47,0.3);
+        }
+        button:hover {
+            background: #f44336;
+        }
+        #results {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 100%;
+            line-height: 1.6;
+        }
+        #loader {
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            color: #d32f2f;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Canadia</h1>
+    <p class="subtitle">Comprendre. Structurer. Décider.</p>
+
+    <input type="text" id="query" class="search-box" placeholder="Posez votre question ici..." onkeypress="if(event.key==='Enter') ask()" />
+
+    <button onclick="ask()">Rechercher</button>
+
+    <div id="loader">Canadia réfléchit... ⏳</div>
+    <div id="results"></div>
+
+    <script>
+        async function ask() {
+            const query = document.getElementById('query').value.trim().toLowerCase();
+            if (!query) return;
+
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results').innerHTML = '';
+
+            let html = '';
+
+            if (query.includes('température') || query.includes('météo') || query.includes('temps')) {
+                const cities = ['Montréal', 'Toronto', 'Vancouver', 'Québec', 'Ottawa', 'Calgary'];
+                let list = '<ul style="padding-left: 1.5rem;">';
+                for (let city of cities) {
+                    try {
+                        const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=%t`);
+                        const temp = await res.text();
+                        list += `<li><strong>${city} :</strong> ${temp.trim()}</li>`;
+                    } catch {
+                        list += `<li><strong>${city} :</strong> indisponible</li>`;
+                    }
+                }
+                list += '</ul>';
+
+                html = `
+                    <h2 style="color:#d32f2f;">Météo actuelle au Canada</h2>
+                    <p>Températures en temps réel :</p>
+                    ${list}
+                    <p><small>Source : wttr.in</small></p>
+                `;
+            } else {
+                html = `
+                    <h2 style="color:#d32f2f;">Question : "${query}"</h2>
+                    <p>Le moteur de recherche est en construction.</p>
+                    <p>Essayez "température du jour" pour voir un exemple fonctionnel avec données réelles !</p>
+                `;
+            }
+
+            document.getElementById('results').innerHTML = html;
+            document.getElementById('loader').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canadia — Test en cours</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #d32f2f;
+            margin-bottom: 0.5rem;
+        }
+        p.subtitle {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 3rem;
+        }
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            padding: 1.2rem 1.5rem;
+            font-size: 1.4rem;
+            border: 3px solid #d32f2f;
+            border-radius: 50px;
+            outline: none;
+            box-shadow: 0 4px 15px rgba(211,47,47,0.2);
+        }
+        .search-box:focus {
+            border-color: #f44336;
+            box-shadow: 0 6px 20px rgba(244,67,54,0.3);
+        }
+        button {
+            margin-top: 2rem;
+            padding: 1rem 3rem;
+            font-size: 1.3rem;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(211,47,47,0.3);
+        }
+        button:hover {
+            background: #f44336;
+        }
+        #results {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 100%;
+            line-height: 1.6;
+        }
+        #loader {
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            color: #d32f2f;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Canadia</h1>
+    <p class="subtitle">Comprendre. Structurer. Décider.</p>
+
+    <input type="text" id="query" class="search-box" placeholder="Posez votre question ici..." onkeypress="if(event.key==='Enter') ask()" />
+
+    <button onclick="ask()">Rechercher</button>
+
+    <div id="loader">Canadia réfléchit... ⏳</div>
+    <div id="results"></div>
+
+    <script>
+        async function ask() {
+            const query = document.getElementById('query').value.trim().toLowerCase();
+            if (!query) return;
+
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results').innerHTML = '';
+
+            let html = '';
+
+            if (query.includes('température') || query.includes('météo') || query.includes('temps')) {
+                const cities = ['Montréal', 'Toronto', 'Vancouver', 'Québec', 'Ottawa', 'Calgary'];
+                let list = '<ul style="padding-left: 1.5rem;">';
+                for (let city of cities) {
+                    try {
+                        const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=%t`);
+                        const temp = await res.text();
+                        list += `<li><strong>${city} :</strong> ${temp.trim()}</li>`;
+                    } catch {
+                        list += `<li><strong>${city} :</strong> indisponible</li>`;
+                    }
+                }
+                list += '</ul>';
+
+                html = `
+                    <h2 style="color:#d32f2f;">Météo actuelle au Canada</h2>
+                    <p>Températures en temps réel :</p>
+                    ${list}
+                    <p><small>Source : wttr.in</small></p>
+                `;
+            } else {
+                html = `
+                    <h2 style="color:#d32f2f;">Question : "${query}"</h2>
+                    <p>Le moteur de recherche est en construction.</p>
+                    <p>Essayez "température du jour" pour voir un exemple fonctionnel avec données réelles !</p>
+                `;
+            }
+
+            document.getElementById('results').innerHTML = html;
+            document.getElementById('loader').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
