@@ -11,7 +11,10 @@ if [ ! -d "$SCRIPT_DIR/.venv" ]; then
     python3 -m venv "$SCRIPT_DIR/.venv"
     
     echo "📥 Installation des dépendances..."
-    "$SCRIPT_DIR/.venv/bin/pip" install -q fastapi uvicorn python-dotenv jinja2 requests feedparser beautifulsoup4 lxml langchain langchain-community
+    echo "   Cela peut prendre quelques minutes..."
+    "$SCRIPT_DIR/.venv/bin/pip" install --upgrade pip setuptools wheel > /dev/null 2>&1
+    "$SCRIPT_DIR/.venv/bin/pip" install fastapi uvicorn python-dotenv jinja2 requests feedparser beautifulsoup4 lxml > /dev/null 2>&1
+    "$SCRIPT_DIR/.venv/bin/pip" install langchain langchain-community > /dev/null 2>&1
     echo "✅ Environnement configuré avec succès!"
 fi
 
