@@ -96,12 +96,12 @@
             margin-bottom: 1.2rem;
         }
         .advanced-filters select {
-            background: #e0e0e0;
-            border: none;
+            background: var(--surface);
+            border: 1px solid var(--muted);
             border-radius: 24px;
             padding: 0.7rem 1.5rem;
             font-size: 1rem;
-            color: #555;
+            color: var(--text);
         }
         .advanced-actions {
             display: flex;
@@ -140,9 +140,9 @@
         <h1 class="title">Canadia</h1>
         <p class="subtitle">Comprendre. Structurer. Décider.</p>
         <div class="mode-selector">
-            <button class="mode-btn active" onclick="setMode('citizen')">Citoyen</button>
-            <button class="mode-btn" onclick="setMode('student')">Étudiant</button>
-            <button class="mode-btn" onclick="setMode('pro')">Entreprise</button>
+            <button class="mode-btn active" onclick="setMode('citizen', this)">Citoyen</button>
+            <button class="mode-btn" onclick="setMode('student', this)">Étudiant</button>
+            <button class="mode-btn" onclick="setMode('pro', this)">Entreprise</button>
         </div>
     </header>
 
@@ -177,10 +177,10 @@
     <script>
         let currentMode = 'citizen';
 
-        function setMode(mode) {
+        function setMode(mode, button) {
             currentMode = mode;
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            button.classList.add('active');
         }
 
         function handleEnter(e) {
@@ -208,11 +208,18 @@
                 let list = '<ul>';
                 for (let city of cities) {
                     try {
-                        const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=%t`);
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 5000);
+                        const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=%t`, {
+                            signal: controller.signal
+                        });
+                        clearTimeout(timeoutId);
+                        if (!res.ok) throw new Error('HTTP error');
                         const temp = await res.text();
                         list += `<li><strong>${city} :</strong> ${temp.trim()}</li>`;
-                    } catch {
-                        list += `<li><strong>${city} :</strong> indisponible</li>`;
+                    } catch (err) {
+                        const reason = err.name === 'AbortError' ? 'timeout' : 'indisponible';
+                        list += `<li><strong>${city} :</strong> ${reason}</li>`;
                     }
                 }
                 list += '</ul>';
