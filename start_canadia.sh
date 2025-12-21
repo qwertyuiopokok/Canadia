@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PORT=8080
+PORT=9800
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
