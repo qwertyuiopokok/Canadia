@@ -6,6 +6,8 @@ from pydantic import BaseModel
 from app.api.rss_scraper import fetch_rss_articles
 from app.core.ask import ask as core_ask
 
+router = APIRouter()
+
 @router.get("/suggestions")
 def get_suggestions():
     """Retourne une liste de suggestions d’actualités du jour (titres)."""
