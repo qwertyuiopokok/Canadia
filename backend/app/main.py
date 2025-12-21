@@ -192,7 +192,7 @@ def start_scheduler_background(interval_minutes=30):
 start_scheduler_background(interval_minutes=30)
 
 # Jinja2 templates setup
-templates = Jinja2Templates(directory="backend/app/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 

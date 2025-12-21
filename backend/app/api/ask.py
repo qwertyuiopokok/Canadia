@@ -33,7 +33,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 # Initialisation des templates (doit être partagé avec main.py)
-templates = Jinja2Templates(directory="backend/app/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 def analyse_question(question: str) -> dict:
     q = question.lower()
