@@ -15,4 +15,4 @@ source "$SCRIPT_DIR/.venv/bin/activate"
 
 # Change to backend directory and run uvicorn
 cd "$SCRIPT_DIR/backend"
-python3 -m uvicorn app.main:app --host 127.0.0.1 --port $PORT
+python3 -m uvicorn app.main:app --host 0.0.0.0 --port $PORT

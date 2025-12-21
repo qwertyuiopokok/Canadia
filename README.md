@@ -87,13 +87,13 @@ Create a `.env` file in the root directory with your configuration:
 ```bash
 source .venv/bin/activate
 cd backend
-uvicorn app.main:app --reload --host 127.0.0.1 --port 9800
+uvicorn app.main:app --reload --host 0.0.0.0 --port 9800
 ```
 
 The API will be available at:
-- Main API: http://127.0.0.1:9800
-- Swagger UI docs: http://127.0.0.1:9800/docs
-- ReDoc: http://127.0.0.1:9800/redoc
+- Main API: http://localhost:9800 (or http://[your-server-ip]:9800 for remote access)
+- Swagger UI docs: http://localhost:9800/docs
+- ReDoc: http://localhost:9800/redoc
 
 ## Development
 
@@ -111,8 +111,10 @@ For development with auto-reload:
 ```bash
 source .venv/bin/activate
 cd backend
-uvicorn app.main:app --reload --host 127.0.0.1 --port 9800
+uvicorn app.main:app --reload --host 0.0.0.0 --port 9800
 ```
+
+**Note:** Using `--host 0.0.0.0` allows access from other machines. For local-only development, use `--host 127.0.0.1`.
 
 ### Project Architecture
 
@@ -158,6 +160,25 @@ uvicorn app.main:app --reload
 Kill the process using the port (default 9800):
 ```bash
 lsof -ti tcp:9800 | xargs kill -9  # macOS/Linux
+```
+
+### Connection refused or cannot access site
+
+**Issue:** Cannot connect to the server from another machine or browser.
+
+**Solutions:**
+1. **Check the host binding:** The server must use `--host 0.0.0.0` (not `127.0.0.1`) to accept external connections
+2. **Verify dependencies are installed:** Run `pip install -r requirements.txt` before starting
+3. **Check firewall:** Ensure port 9800 is not blocked by your firewall
+4. **For remote access:** Use `http://[server-ip]:9800` instead of `http://localhost:9800`
+5. **Check server is running:** Look for "Uvicorn running on..." message in the terminal
+
+### Missing dependencies error
+
+If you see `ModuleNotFoundError`, install all required dependencies:
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ## License

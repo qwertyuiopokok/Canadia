@@ -76,14 +76,14 @@ Copy the example `.env` file (if exists) or create one:
 ```bash
 source .venv/bin/activate
 cd backend
-uvicorn app.main:app --reload --host 127.0.0.1 --port 9800
+uvicorn app.main:app --reload --host 0.0.0.0 --port 9800
 ```
 
 ### 8. Access the Application
 
-- API: http://127.0.0.1:9800
-- API Documentation (Swagger UI): http://127.0.0.1:9800/docs
-- Alternative Documentation (ReDoc): http://127.0.0.1:9800/redoc
+- API: http://localhost:9800 (or http://[your-server-ip]:9800 for remote access)
+- API Documentation (Swagger UI): http://localhost:9800/docs
+- Alternative Documentation (ReDoc): http://localhost:9800/redoc
 
 ## Verification
 
@@ -131,12 +131,33 @@ cd backend
 uvicorn app.main:app --reload
 ```
 
+### Issue: "Connection refused" or cannot access the site
+
+**Solutions:**
+1. **Install all dependencies first:**
+   ```bash
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+2. **Use correct host binding:** Server must use `0.0.0.0` to accept external connections (already configured in `start_canadia.sh`)
+3. **Access from correct URL:**
+   - Local: http://localhost:9800
+   - Remote: http://[server-ip]:9800
+4. **Check firewall settings:** Ensure port 9800 is not blocked
+
+### Issue: ModuleNotFoundError
+
+**Solution:** Dependencies not installed. Run:
+```bash
+pip install -r requirements.txt
+```
+
 ## Development Workflow
 
 1. **Activate environment:** `source .venv/bin/activate`
 2. **Make changes** to code
 3. **Test locally:** Server auto-reloads with `--reload` flag
-4. **Check API docs:** Visit http://127.0.0.1:9800/docs
+4. **Check API docs:** Visit http://localhost:9800/docs
 5. **Commit changes:** Use git as normal
 
 ## Deactivating the Virtual Environment
@@ -150,7 +171,7 @@ deactivate
 ## Next Steps
 
 - Read the full [README.md](README.md) for architecture details
-- Explore the API at http://127.0.0.1:9800/docs
+- Explore the API at http://localhost:9800/docs
 - Check the `backend/app/` directory for code structure
 - Review endpoints in `backend/app/api/`
 
