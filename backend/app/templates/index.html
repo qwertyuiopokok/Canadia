@@ -2,70 +2,352 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <title>Canadia — Moteur de recherche</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canadia — Comprendre. Structurer. Décider.</title>
     <style>
+        :root {
+            --primary: #d32f2f;
+            --secondary: #f44336;
+            --blue: #3a8dde;
+            --accent: #ffeb3b;
+            --bg: #e3f2fd;
+            --surface: #ffffff;
+            --text: #212121;
+            --muted: #666666;
+            --gradient: linear-gradient(90deg, #3a8dde 0%, #d32f2f 100%);
+        }
+        body.dark {
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --text: #f5f5f5;
+            --muted: #aaaaaa;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
             margin: 0;
-            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         header {
-            background: #b30000;
+            background: var(--primary);
             color: white;
-            padding: 1.5rem 0 1rem 0;
-            text-align: center;
-        }
-        main {
             padding: 2rem 1rem;
-            max-width: 500px;
-            margin: auto;
-        }
-        .search-container {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            padding: 2rem;
-        }
-        .footer {
-            margin-top: 4rem;
             text-align: center;
-            color: #888;
-            opacity: 0.7;
+        }
+        .title { font-size: 2.8rem; font-weight: 700; margin: 0; }
+        .subtitle { font-size: 1.2rem; opacity: 0.9; margin: 0.5rem 0 2rem; }
+        .mode-selector { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .mode-btn {
+            padding: 0.8rem 2rem; background: rgba(255,255,255,0.2); border: none; border-radius: 50px;
+            color: white; font-size: 1.1rem; cursor: pointer; transition: background 0.3s;
+        }
+        .mode-btn.active { background: white; color: var(--primary); font-weight: 600; }
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .search-ui-form {
+            background: var(--surface);
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 520px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--gradient);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 2rem;
+        }
+        .search-bar-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+            font-size: 1.3rem;
+            padding: 1rem 1.2rem;
+        }
+        .search-bar-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .advanced-search {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem 1.2rem;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+        }
+        .advanced-search.show {
+            max-height: 500px;
+            opacity: 1;
+            padding: 1.5rem 1.2rem;
+        }
+        .advanced-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+        }
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--blue);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+        .advanced-toggle:hover {
+            color: var(--primary);
+        }
+        .welcome-hints {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+        .welcome-hints strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .example-queries {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.75rem;
+        }
+        .example-query {
+            background: var(--gradient);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .example-query:hover {
+            transform: translateY(-2px);
+        }
+        .advanced-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .advanced-filters select {
+            background: var(--surface);
+            border: 1px solid var(--muted);
+            border-radius: 24px;
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+            color: var(--text);
+        }
+        .advanced-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #results-count { font-size: 1rem; color: var(--muted); }
+        .reset-btn { background: none; border: none; color: var(--muted); font-size: 1rem; cursor: pointer; }
+        .search-btn-gradient {
+            background: var(--gradient);
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            padding: 0.7rem 2.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        #loader { text-align: center; margin: 3rem; color: var(--muted); font-size: 1.4rem; display: none; }
+        #results {
+            width: 100%; max-width: 800px; margin: 3rem auto; padding: 2rem;
+            background: var(--surface); border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            line-height: 1.6;
+        }
+        #results h2 { color: var(--primary); }
+        #theme-toggle { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: white; }
+        @media (max-width: 600px) {
+            .advanced-filters { grid-template-columns: 1fr; }
+            .title { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>🇨🇦 Canadia</h1>
-        <div>Votre moteur de recherche citoyen</div>
-    </header>
-    <main>
-        <div class="search-container">
-            <form id="search-form">
-                <label for="question">Posez votre question :</label>
-                <input type="text" id="question" name="question" placeholder="Ex : météo à Montréal aujourd'hui" required autocomplete="off" style="width:100%;margin-bottom:1rem;">
-                <button type="submit">Rechercher sur le web</button>
-            </form>
-            <div id="result" style="margin-top:2rem;"></div>
+        <button id="theme-toggle">🌙</button>
+        <h1 class="title">Canadia</h1>
+        <p class="subtitle">Comprendre. Structurer. Décider.</p>
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('citizen', this)">Citoyen</button>
+            <button class="mode-btn" onclick="setMode('student', this)">Étudiant</button>
+            <button class="mode-btn" onclick="setMode('pro', this)">Entreprise</button>
         </div>
-        <script>
-        document.getElementById('search-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const q = document.getElementById('question').value;
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '<em>Recherche en cours...</em>';
-            try {
-                const resp = await fetch(`/ask_web?question=${encodeURIComponent(q)}`);
-                if (!resp.ok) throw new Error('Erreur serveur');
-                const data = await resp.json();
-                resultDiv.innerHTML = `<div style="background:#fff;padding:1.2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.07);"><strong>Réponse :</strong><br>${data.answer || 'Aucune réponse.'}</div>`;
-            } catch (err) {
-                resultDiv.innerHTML = '<span style="color:red;">Erreur lors de la recherche.</span>';
-            }
-        });
-        </script>
+    </header>
+
+    <main>
+        <form class="search-ui-form" onsubmit="event.preventDefault(); ask();">
+            <div class="search-bar">
+                <input type="text" id="query" class="search-bar-input" placeholder="Posez votre question ici..." onkeypress="handleEnter(event)" />
+                <button type="submit" class="search-bar-btn">🔍</button>
+            </div>
+            
+            <div class="welcome-hints">
+                <strong>💡 Exemples de questions :</strong>
+                <div class="example-queries">
+                    <span class="example-query" onclick="tryExample('température du jour')">Météo du jour</span>
+                    <span class="example-query" onclick="tryExample('Qu\'est-ce que le Canada?')">Culture canadienne</span>
+                    <span class="example-query" onclick="tryExample('actualités Canada')">Actualités</span>
+                </div>
+            </div>
+            
+            <button type="button" class="advanced-toggle" onclick="toggleAdvanced()">
+                <span id="toggle-text">Afficher les filtres avancés</span>
+                <span id="toggle-icon">▼</span>
+            </button>
+            
+            <div class="advanced-search" id="advanced-search">
+                <span class="advanced-title">RECHERCHE AVANCÉE</span>
+                <div class="advanced-filters">
+                    <select><option>Catégorie</option></select>
+                    <select><option>Région</option></select>
+                    <select><option>Date</option></select>
+                    <select><option>Source</option></select>
+                    <select><option>Type</option></select>
+                    <select><option>Priorité</option></select>
+                </div>
+                <div class="advanced-actions">
+                    <span id="results-count">Prêt pour votre question</span>
+                    <button type="button" class="reset-btn" onclick="resetFilters()">RESET</button>
+                    <button type="submit" class="search-btn-gradient">RECHERCHER</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="loader">Canadia recherche... ⏳</div>
+        <div id="results"></div>
     </main>
-    <div class="footer">
-        &copy; 2025 Canadia. Rouge, blanc et bleu pour tous.
+
+    <script>
+        let currentMode = 'citizen';
+
+        function setMode(mode, button) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') ask();
+        }
+
+        function toggleAdvanced() {
+            const advancedSection = document.getElementById('advanced-search');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+            
+            if (advancedSection.classList.contains('show')) {
+                advancedSection.classList.remove('show');
+                toggleText.textContent = 'Afficher les filtres avancés';
+                toggleIcon.textContent = '▼';
+            } else {
+                advancedSection.classList.add('show');
+                toggleText.textContent = 'Masquer les filtres avancés';
+                toggleIcon.textContent = '▲';
+            }
+        }
+
+        function tryExample(query) {
+            document.getElementById('query').value = query;
+            document.getElementById('query').focus();
+        }
+
+        function resetFilters() {
+            document.getElementById('query').value = '';
+            document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+            document.getElementById('results').style.display = 'none';
+        }
+
+        async function ask() {
+            const query = document.getElementById('query').value.trim().toLowerCase();
+            if (!query) return;
+
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('results').style.display = 'none';
+
+            let html = '';
+
+            if (query.includes('température') || query.includes('météo') || query.includes('temps')) {
+                const cities = ['Montréal', 'Toronto', 'Vancouver', 'Québec', 'Ottawa', 'Calgary'];
+                let list = '<ul>';
+                for (let city of cities) {
+                    try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 5000);
+                        const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=%t`, {
+                            signal: controller.signal
+                        });
+                        clearTimeout(timeoutId);
+                        if (!res.ok) throw new Error('HTTP error');
+                        const temp = await res.text();
+                        list += `<li><strong>${city} :</strong> ${temp.trim()}</li>`;
+                    } catch (err) {
+                        const reason = err.name === 'AbortError' ? 'timeout' : 'indisponible';
+                        list += `<li><strong>${city} :</strong> ${reason}</li>`;
+                    }
+                }
+                list += '</ul>';
+
+                html = `
+                    <h2>🧠 Météo actuelle au Canada (temps réel)</h2>
+                    <strong>Résumé :</strong> Températures mises à jour instantanément<br><br>
+                    <strong>Villes principales :</strong>${list}
+                    <strong>Source :</strong> wttr.in (données officielles)
+                `;
+            } else {
+                html = `
+                    <h2>🧠 Question reçue : "${query}"</h2>
+                    <strong>Mode :</strong> ${currentMode === 'citizen' ? 'Citoyen' : currentMode === 'student' ? 'Étudiant' : 'Entreprise'}<br><br>
+                    <strong>Réponse en développement</strong><br>
+                    Essayez "température du jour" pour des données réelles immédiates.
+                `;
+            }
+
+            document.getElementById('results').innerHTML = html;
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        document.getElementById('theme-toggle').onclick = () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+        };
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            document.getElementById('theme-toggle').textContent = '☀️';
+        }
+    </script>
+</body>
+</html>
 
