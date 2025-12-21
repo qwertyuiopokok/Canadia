@@ -192,7 +192,7 @@ def start_scheduler_background(interval_minutes=30):
 start_scheduler_background(interval_minutes=30)
 
 # Jinja2 templates setup
-templates = Jinja2Templates(directory="backend/app/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 
@@ -213,17 +213,17 @@ app.include_router(ask_web_router)
 
 
 # --- Ajout du routeur status ---
-from app.api.status import router as status_router
-app.include_router(status_router)
+# from app.api.status import router as status_router
+# app.include_router(status_router)
 
-from app.api.ask_anything import router as ask_anything_router
-app.include_router(ask_anything_router)
+# from app.api.ask_anything import router as ask_anything_router
+# app.include_router(ask_anything_router)
 
-from app.api.ask_anything_pro import router as ask_anything_pro_router
-app.include_router(ask_anything_pro_router)
+# from app.api.ask_anything_pro import router as ask_anything_pro_router
+# app.include_router(ask_anything_pro_router)
 
-from app.api.ask_rag import router as ask_rag_router
-app.include_router(ask_rag_router)
+# from app.api.ask_rag import router as ask_rag_router
+# app.include_router(ask_rag_router)
 
 
 @app.post("/document")
