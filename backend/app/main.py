@@ -13,12 +13,14 @@ def check_faiss_llm():
         logging.warning(f"[Canadia] Problème LLM/FAISS: {e}")
 
 check_faiss_llm()
-# --- Load environment variables from .env ---
+import logging
 from dotenv import load_dotenv
 load_dotenv()
-
-# --- Database initialization ---
-from .storage.database import init_db
+from dotenv import load_dotenv
+load_dotenv()
+MEMORY_ALERT_EMAIL = os.getenv("MEMORY_ALERT_EMAIL")
+YAGMAIL_USER = os.getenv("YAGMAIL_USER")
+YAGMAIL_PASS = os.getenv("YAGMAIL_PASS")
 from fastapi import FastAPI, Response
 app = FastAPI()
 
