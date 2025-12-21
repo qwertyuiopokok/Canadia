@@ -1,7 +1,10 @@
-from fastapi import APIRouter
-from app.api.rss_scraper import fetch_rss_articles
+from typing import Any, Dict, Optional
 
-router = APIRouter()
+from fastapi import APIRouter
+from pydantic import BaseModel
+
+from app.api.rss_scraper import fetch_rss_articles
+from app.core.ask import ask as core_ask
 
 @router.get("/suggestions")
 def get_suggestions():
@@ -9,11 +12,23 @@ def get_suggestions():
     articles = fetch_rss_articles()
     # On retourne uniquement les titres et liens pour l’autocomplétion
     return [{"title": a["title"], "link": a["link"]} for a in articles if a.get("title") and a.get("link")]
-from typing import Any, Dict
+
+
+class CitizenAskRequest(BaseModel):
+    question: str
+    context: Optional[str] = None
+    niveau: int = 1
+
+
+@router.post("/citizen/ask")
+def citizen_ask(payload: CitizenAskRequest) -> Dict[str, Any]:
+    result = core_ask(payload.question, payload.niveau)
+    return result
+
+
 from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from app.core.ask import ask as core_ask
 
 # Initialisation des templates (doit être partagé avec main.py)
 templates = Jinja2Templates(directory="backend/app/templates")
@@ -86,8 +101,6 @@ def generer_reponse(question: str, contenu: dict, evaluation: dict, analyse: dic
         return ORIENTATION.format(sources=sources)
 
 # Endpoint principal
-from fastapi import APIRouter
-router = APIRouter()
 
 @router.get("/ask", response_class=HTMLResponse)
 def ask_endpoint(request: Request, question: str, niveau: int = 1):
