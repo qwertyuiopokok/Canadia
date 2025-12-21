@@ -13,20 +13,40 @@ def ask(question: str):
 	if coverage == "none":
 		return {
 			"answer": T.TRANSPARENCY,
-			"ai_used": False
+			"ai_used": False,
+			"sources": [],
+			"summaries": []
 		}
 
-	sources = list({d.metadata.get("source") for d in docs})
+	VERIFIED_SOURCES = {
+		"École locale", "Emploi-Québec", "Gouvernement du Québec", "Revenu Québec", "MIFI", "STM", "AMT", "L'Appui", "Canadia", "Culture générale"
+	}
+	sources = []
+	summaries = []
+	for d in docs:
+		src = d.metadata.get("source")
+		if src in VERIFIED_SOURCES:
+			sources.append(src)
+			summary = d.page_content[:160] + ("..." if len(d.page_content) > 160 else "")
+			summaries.append(summary)
 
 	return {
 		"answer": T.FACTUAL.format(
 			answer=result["result"],
 			sources=", ".join(sources)
 		),
-		"ai_used": True
+		"ai_used": True,
+		"sources": sources,
+		"summaries": summaries
 	}
 
-from app.index.retriever import get_retriever
+try:
+	try:
+	    from app.index.retriever import get_retriever
+	except ModuleNotFoundError:
+	    from backend.app.index.retriever import get_retriever
+except ModuleNotFoundError:
+	from backend.app.index.retriever import get_retriever
 
 def get_rag_engine():
 	llm = Ollama(model="tinyllama")
@@ -53,10 +73,11 @@ prompt = PromptTemplate(
 	template="""
 Tu es une IA citoyenne destinée aux Canadiens et aux Québécois.
 
-Tu aides à comprendre l’information publique, en favorisant les sources
-du Québec et du Canada lorsque pertinent.
+Ta mission est d'expliquer l'information publique ET historique, en donnant toujours le contexte temporel, les dates clés, les acteurs principaux et les conséquences majeures des événements.
 
-Tu restes neutre, factuelle et accessible.
+Favorise les sources du Québec et du Canada lorsque pertinent, et cite les sources historiques si possible.
+
+Reste neutre, factuelle, accessible et précise sur les faits historiques.
 
 Contexte :
 {context}
@@ -64,7 +85,7 @@ Contexte :
 Question :
 {question}
 
-Réponds clairement.
+Réponds clairement, en situant toujours la réponse dans le temps (date, période, siècle) et en donnant le contexte historique si la question s'y prête.
 """
 )
 
@@ -117,8 +138,14 @@ def ask(question: str) -> Dict:
 		"answer": "Le système fonctionne. Question reçue : " + question,
 		"sources": ["test"]
 	}
-from app.core.coverage import evaluate_coverage
-from app.core import response_templates as T
+try:
+	from app.core.coverage import evaluate as evaluate_coverage
+except ModuleNotFoundError:
+	from backend.app.core.coverage import evaluate as evaluate_coverage
+try:
+	from app.core import response_templates as T
+except ModuleNotFoundError:
+	from backend.app.core import response_templates as T
 
 rag = None
 
@@ -147,7 +174,13 @@ def ask(question: str):
 		),
 		"ai_used": True
 	}
-from app.index.retriever import get_retriever
+try:
+	try:
+	    from app.index.retriever import get_retriever
+	except ModuleNotFoundError:
+	    from backend.app.index.retriever import get_retriever
+except ModuleNotFoundError:
+	from backend.app.index.retriever import get_retriever
 
 def get_rag_engine():
 	llm = Ollama(model="tinyllama")
