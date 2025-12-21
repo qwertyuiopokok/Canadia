@@ -23,13 +23,23 @@ def start_canadia():
     demo_server = repo_root / "canadia_demo_server.py"
     
     print(f"🔎 Cleaning port {port}...")
-    # Kill any process using the port
+    # Kill any process using the port - use safe subprocess call
     try:
-        subprocess.run(
-            f"lsof -ti tcp:{port} | xargs kill -9 2>/dev/null",
-            shell=True,
+        # Get PIDs using the port
+        result = subprocess.run(
+            ['lsof', '-ti', f'tcp:{port}'],
+            capture_output=True,
+            text=True,
             check=False
         )
+        if result.stdout.strip():
+            pids = result.stdout.strip().split('\n')
+            for pid in pids:
+                if pid:
+                    subprocess.run(['kill', '-9', pid], check=False)
+    except FileNotFoundError:
+        # lsof command not found, skip port cleanup
+        pass
     except Exception:
         pass
     

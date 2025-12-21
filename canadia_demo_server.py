@@ -7,6 +7,7 @@ import json
 import urllib.parse
 import webbrowser
 import threading
+import time
 
 
 HTML_TEMPLATE = r"""
@@ -269,10 +270,20 @@ class CanadiaHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         """Handle POST requests"""
         if self.path == '/api/ask':
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            
             try:
+                # Validate Content-Length header
+                content_length_str = self.headers.get('Content-Length')
+                if not content_length_str:
+                    self.send_response(400)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    error_response = {'error': 'Missing Content-Length header'}
+                    self.wfile.write(json.dumps(error_response).encode())
+                    return
+                
+                content_length = int(content_length_str)
+                post_data = self.rfile.read(content_length)
+                
                 data = json.loads(post_data.decode())
                 question = data.get('question', '')
                 
@@ -290,6 +301,12 @@ class CanadiaHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps(response, ensure_ascii=False).encode('utf-8'))
                 
+            except (ValueError, json.JSONDecodeError) as e:
+                self.send_response(400)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                error_response = {'error': f'Invalid request: {str(e)}'}
+                self.wfile.write(json.dumps(error_response).encode())
             except Exception as e:
                 self.send_response(500)
                 self.send_header('Content-type', 'application/json')
