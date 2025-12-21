@@ -21,11 +21,12 @@ Canadia est une plateforme FastAPI qui fournit un moteur de recherche et des ser
 ./start_canadia.sh
 ```
 
-Le serveur démarrera automatiquement sur `http://127.0.0.1:9800`
+Le serveur démarrera automatiquement sur le port `9800`
 
 2. **Accéder à l'interface web:**
 
-- **Interface principale:** Ouvrez votre navigateur et allez à `http://127.0.0.1:9800`
+- **En local:** `http://localhost:9800`
+- **Via GitHub Codespaces:** Le port sera automatiquement forwarded. Utilisez l'URL fournie par Codespaces (ex: `https://[votre-codespace]-9800.app.github.dev`)
 - **Interface de test:** Ouvrez `index.html` dans votre navigateur pour une interface alternative
 
 ### Installation Manuelle
@@ -42,8 +43,8 @@ source .venv/bin/activate
 # Installer les dépendances (première fois seulement)
 pip install -r requirements.txt
 
-# Démarrer le serveur
-python3 -m uvicorn app.main:app --host 127.0.0.1 --port 9800
+# Démarrer le serveur (accessible de partout)
+python3 -m uvicorn app.main:app --host 0.0.0.0 --port 9800
 ```
 
 ## Fonctionnalités
