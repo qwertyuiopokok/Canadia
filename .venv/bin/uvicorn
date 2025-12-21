@@ -1,4 +1,4 @@
-#!/Users/etiennefournier-morin/Desktop/citoyen-qc/.venv/bin/python3
+#!/home/runner/work/Canadia/Canadia/.venv/bin/python3
 import sys
 from uvicorn.main import main
 if __name__ == '__main__':
