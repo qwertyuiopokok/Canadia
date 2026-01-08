@@ -216,6 +216,10 @@ app.include_router(ask_web_router)
 from app.api.status import router as status_router
 app.include_router(status_router)
 
+# --- Ajout du routeur lng_rabaska ---
+from app.api.lng_rabaska import router as lng_rabaska_router
+app.include_router(lng_rabaska_router)
+
 
 # from app.api.ask_anything import router as ask_anything_router
 # app.include_router(ask_anything_router)
