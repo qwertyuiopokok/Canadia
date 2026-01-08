@@ -126,7 +126,8 @@ CONTENT_STORE = [
 def ask(question: str, niveau: int = 1):
     analysis = analyse_question(question)
     results = search_content(CONTENT_STORE, analysis)
-    coverage = evaluate_coverage(results)
+    from app.core.coverage import evaluate
+    coverage = evaluate(results)
 
     qtype = analysis.get("type", "information")
     sources = results[0]["source"] if results else "https://www.rdl.gouv.qc.ca, https://www.cmhc-schl.gc.ca"
