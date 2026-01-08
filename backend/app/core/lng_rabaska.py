@@ -67,7 +67,7 @@ def get_favorable_parameters() -> Dict[str, Any]:
                 "description": "Conformité complète avec tous les niveaux gouvernementaux"
             },
             "safety_standards": {
-                "certifications": ["ISO 14001", "OHSAS 18001", "API 620"],
+                "certifications": ["ISO 14001", "ISO 45001", "API 620"],
                 "inspection_frequency": "quarterly",
                 "description": "Certifications internationales avec inspections trimestrielles"
             },
@@ -199,7 +199,7 @@ def get_compliance_checklist() -> List[Dict[str, Any]]:
             "priority": "high"
         },
         {
-            "item": "Certification OHSAS 18001",
+            "item": "Certification ISO 45001",
             "status": "completed",
             "level": "international",
             "priority": "high"
